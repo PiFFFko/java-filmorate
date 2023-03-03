@@ -12,6 +12,7 @@ import java.time.LocalDate;
 public class User {
     private Integer id;
     @Email
+    @NotBlank
     private String email;
     @NotBlank
     @WithoutSpaces
