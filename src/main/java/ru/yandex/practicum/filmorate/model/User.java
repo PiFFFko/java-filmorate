@@ -1,0 +1,22 @@
+package ru.yandex.practicum.filmorate.model;
+
+import lombok.Data;
+import ru.yandex.practicum.filmorate.constraint.WithoutSpaces;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Past;
+import java.time.LocalDate;
+
+@Data
+public class User {
+    private Integer id;
+    @Email
+    private String email;
+    @NotBlank
+    @WithoutSpaces
+    private String login;
+    private String name;
+    @Past
+    private LocalDate birthday;
+}
