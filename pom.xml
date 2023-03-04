@@ -12,7 +12,7 @@
 	<artifactId>filmorate</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>filmorate</name>
-	<description>Kogda nechego smotret&apos;!</description>
+	<description>The best films are here and now. Long live cinema!</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>
