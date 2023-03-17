@@ -21,6 +21,11 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
+    public Film get(Integer id) {
+        return filmStorage.get(id);
+    }
+
+    @Override
     public Film create(Film film) {
         return filmStorage.add(film);
     }
@@ -33,5 +38,20 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public Collection<Film> getAll() {
         return filmStorage.getAll();
+    }
+
+    @Override
+    public Film likeFilm(Integer id, Integer userId) {
+        return filmStorage.likeFilm(id, userId);
+    }
+
+    @Override
+    public Film deleteLike(Integer id, Integer userId) {
+        return filmStorage.deleteLike(id, userId);
+    }
+
+    @Override
+    public Collection<Film> getPopular(Integer count) {
+        return filmStorage.getPopular(count);
     }
 }
