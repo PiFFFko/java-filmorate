@@ -1,0 +1,60 @@
+Project filmorate{
+}
+
+
+Table films{
+  film_id integer [primary key]
+  description varchar[200]
+  release_date date
+  duration long
+  rating_id integer 
+}
+
+Table likes{
+  film_id integer [primary key]
+  user_id integer [primary key]
+}
+
+Table ratings{
+  rating_id integer [primary key]
+  name varchar[30]
+}
+
+Table film_category{
+  film_id integer [primary key]
+  genre_id integer [primary key]
+}
+
+Table genres{
+  genre_id integer [primary key]
+  name varchar[30]
+}
+
+Table users{
+  user_id integer [primary key]
+  email varchar[50]
+  login varchar[20]
+  name varchar[20]
+  birthday date
+}
+
+Table friends{
+user_id_from integer [primary key]
+user_id_to integer [primary key]
+friend_status boolean
+}
+
+
+Ref: "films"."rating_id" > "ratings"."rating_id"
+
+Ref: "friends"."user_id_from" > "users"."user_id"
+
+Ref: "friends"."user_id_to" > "users"."user_id"
+
+Ref: "films"."film_id" < "film_category"."film_id"
+
+Ref: "film_category"."genre_id" > "genres"."genre_id"
+
+Ref: "films"."film_id" < "likes"."film_id"
+
+Ref: "likes"."user_id" > "users"."user_id"
