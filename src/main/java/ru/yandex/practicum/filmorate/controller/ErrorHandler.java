@@ -27,6 +27,7 @@ public class ErrorHandler {
     public ErrorResponse queryCannotBeExecute(final DataIntegrityViolationException e) {
         return new ErrorResponse(e.getMessage());
     }
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleError(final Throwable e) {
