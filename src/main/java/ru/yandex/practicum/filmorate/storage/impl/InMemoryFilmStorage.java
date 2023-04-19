@@ -1,7 +1,9 @@
 package ru.yandex.practicum.filmorate.storage.impl;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.EntityNotExistException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -12,24 +14,21 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 @Slf4j
 public class InMemoryFilmStorage implements FilmStorage {
 
     private Map<Integer, Film> films = new HashMap<>();
     private Integer idGenerator = 1;
     @Autowired
+    @Qualifier("userDbStorage")
     private UserStorage userStorage;
-
-    public InMemoryFilmStorage(UserStorage userStorage) {
-        this.userStorage = userStorage;
-    }
 
     @Override
     public Film get(Integer id) {
         log.info("Запрос на получение фильма c id {}", id);
-        if(films.containsKey(id)){
+        if (films.containsKey(id))
             return films.get(id);
-        }
         throw new EntityNotExistException(String.format("Фильма с id %s не существует", id));
     }
 
@@ -68,9 +67,8 @@ public class InMemoryFilmStorage implements FilmStorage {
         return films.values();
     }
 
-    @Override
     public Film likeFilm(Integer id, Integer userId) {
-        if (films.containsKey(id) && userStorage.contains(userId)){
+        if (films.containsKey(id) && userStorage.contains(userId)) {
             Set<Integer> likes = films.get(id).getLikesFromUsers();
             likes.add(userId);
             films.get(id).setLikesFromUsers(likes);
@@ -80,9 +78,8 @@ public class InMemoryFilmStorage implements FilmStorage {
                 String.format("Пользователя с id %s или фильма с id %s не существует",userId,id));
     }
 
-    @Override
     public Film deleteLike(Integer id, Integer userId) {
-        if (films.containsKey(id) && userStorage.contains(userId)){
+        if (films.containsKey(id) && userStorage.contains(userId)) {
             Set<Integer> likes = films.get(id).getLikesFromUsers();
             likes.remove(userId);
             films.get(id).setLikesFromUsers(likes);

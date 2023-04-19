@@ -61,7 +61,6 @@ public class InMemoryUserStorage implements UserStorage {
         return users.values();
     }
 
-    @Override
     public User addFriend(Integer id, Integer friendId) {
         if (users.containsKey(id) && users.containsKey(friendId)) {
             Set<Integer> friends = users.get(id).getFriends();
@@ -77,7 +76,7 @@ public class InMemoryUserStorage implements UserStorage {
         throw new EntityNotExistException(String.format("Пользователя с id {} или {} не существует", id, friendId));
     }
 
-    @Override
+
     public User deleteFriend(Integer id, Integer friendId) {
         if (users.containsKey(id) && users.containsKey(friendId)) {
             Set<Integer> friends = users.get(id).getFriends();

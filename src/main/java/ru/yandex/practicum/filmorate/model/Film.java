@@ -9,8 +9,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -24,9 +23,19 @@ public class Film {
     LocalDate releaseDate;
     @Positive
     long duration;
-    Set<Integer> likesFromUsers = new HashSet<>();
+    Rating mpa;
+    List<Genre> genres = new ArrayList<>();
+    Set<Integer> likesFromUsers = new TreeSet<>();
 
-    public Integer getPopularity(){
+    public Film(Integer id, String name, String description, LocalDate releaseDate, long duration) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;
+    }
+
+    public Integer getPopularity() {
         return likesFromUsers.size();
     }
 }
