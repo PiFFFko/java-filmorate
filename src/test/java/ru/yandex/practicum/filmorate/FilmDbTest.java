@@ -26,7 +26,7 @@ public class FilmDbTest {
     private Film testFilm;
 
     @BeforeEach
-    void addFilm(){
+    void addFilm() {
         testFilm = new Film();
         testFilm.setName("Die Hard");
         testFilm.setReleaseDate(LocalDate.of(1988, Month.JULY,12));
@@ -35,7 +35,7 @@ public class FilmDbTest {
     }
 
     @Test
-    void getFilmById(){
+    void getFilmById() {
         testFilm = filmDbStorage.get(1);
         Assertions.assertThat(testFilm).hasFieldOrPropertyWithValue("id",1);
         Assertions.assertThat(testFilm).hasFieldOrPropertyWithValue("name", "Die Hard");
@@ -43,14 +43,14 @@ public class FilmDbTest {
     }
 
     @Test
-    void removeFilm(){
+    void removeFilm() {
         testFilm.setId(1);
         filmDbStorage.remove(testFilm);
         Assertions.assertThatThrownBy(()-> filmDbStorage.get(1)).isInstanceOf(EntityNotExistException.class);
     }
 
     @Test
-    void updateFilm(){
+    void updateFilm() {
         Film updateFilm = new Film();
         updateFilm.setId(1);
         updateFilm.setName("Terminator 2 Judgement Day");

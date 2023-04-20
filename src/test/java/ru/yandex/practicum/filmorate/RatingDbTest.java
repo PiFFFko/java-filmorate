@@ -21,23 +21,22 @@ public class RatingDbTest {
     private final RatingDbStorage ratingDbStorage;
     private Rating testRating;
 
-
     @Test
-    void getRatingById(){
+    void getRatingById() {
         testRating = ratingDbStorage.get(1);
         Assertions.assertThat(testRating).hasFieldOrPropertyWithValue("id",1);
         Assertions.assertThat(testRating).hasFieldOrPropertyWithValue("name", "G");
     }
 
     @Test
-    void removeRating(){
+    void removeRating() {
         testRating = ratingDbStorage.get(1);
         ratingDbStorage.remove(testRating);
         Assertions.assertThatThrownBy(()-> ratingDbStorage.get(1)).isInstanceOf(EntityNotExistException.class);
     }
 
     @Test
-    void updateRating(){
+    void updateRating() {
         Rating updateRating = new Rating(1,"X");
         ratingDbStorage.update(updateRating);
         testRating = ratingDbStorage.get(1);

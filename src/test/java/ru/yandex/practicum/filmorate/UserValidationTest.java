@@ -21,7 +21,7 @@ public class UserValidationTest {
     private Validator validator;
     User user;
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         try(ValidatorFactory factory = Validation.buildDefaultValidatorFactory()){
             factory.getConstraintValidatorFactory();
             validator = factory.getValidator();
@@ -31,7 +31,7 @@ public class UserValidationTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"","mail"})
-    public void incorrectFormatOfEmailShouldFailValidation(String mail){
+    public void incorrectFormatOfEmailShouldFailValidation(String mail) {
         user.setEmail(mail);
         user.setLogin(CORRECT_LOGIN);
         Set<ConstraintViolation<User>> violations =validator.validate(user);
@@ -39,7 +39,7 @@ public class UserValidationTest {
     }
 
     @Test
-    public void correctMailShouldPassValidation(){
+    public void correctMailShouldPassValidation() {
         user.setEmail(CORRECT_MAIL);
         user.setLogin(CORRECT_LOGIN);
         Set<ConstraintViolation<User>> violations =validator.validate(user);
@@ -48,7 +48,7 @@ public class UserValidationTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"","lo gin"})
-    public void incorrectLoginShouldFailValidation(String login){
+    public void incorrectLoginShouldFailValidation(String login) {
         user.setEmail(CORRECT_MAIL);
         user.setLogin(login);
         Set<ConstraintViolation<User>> violations =validator.validate(user);
@@ -56,7 +56,7 @@ public class UserValidationTest {
     }
 
     @Test
-    public void correctLoginShouldPassValidation(){
+    public void correctLoginShouldPassValidation() {
         user.setEmail(CORRECT_MAIL);
         user.setLogin(CORRECT_LOGIN);
         Set<ConstraintViolation<User>> violations =validator.validate(user);
@@ -64,7 +64,7 @@ public class UserValidationTest {
     }
 
    @Test
-   public void dateInTheFutureShouldFailValidation(){
+   public void dateInTheFutureShouldFailValidation() {
        user.setEmail(CORRECT_MAIL);
        user.setLogin(CORRECT_LOGIN);
        user.setBirthday(LocalDate.now().plusDays(1));
@@ -73,7 +73,7 @@ public class UserValidationTest {
    }
 
    @Test
-    public void correctDateShouldPassValidation(){
+    public void correctDateShouldPassValidation() {
        user.setEmail(CORRECT_MAIL);
        user.setLogin(CORRECT_LOGIN);
        user.setBirthday(LocalDate.now().minusDays(1));

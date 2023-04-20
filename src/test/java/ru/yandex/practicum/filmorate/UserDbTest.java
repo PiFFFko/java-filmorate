@@ -24,7 +24,7 @@ class UserDbTest {
 	private User testUser;
 
 	@BeforeEach
-	void addUser(){
+	void addUser() {
 		testUser = new User();
 		testUser.setEmail("test@test.ru");
 		testUser.setLogin("test");
@@ -33,7 +33,7 @@ class UserDbTest {
 	}
 
 	@Test
-	void getUserById(){
+	void getUserById() {
 		testUser = userDbStorage.get(1);
 		Assertions.assertThat(testUser).hasFieldOrPropertyWithValue("id",1);
 		Assertions.assertThat(testUser).hasFieldOrPropertyWithValue("email", "test@test.ru");
@@ -41,14 +41,14 @@ class UserDbTest {
 	}
 
 	@Test
-	void removeUser(){
+	void removeUser() {
 		testUser.setId(1);
 		userDbStorage.remove(testUser);
 		Assertions.assertThatThrownBy(()-> userDbStorage.get(1)).isInstanceOf(EntityNotExistException.class);
 	}
 
 	@Test
-	void updateUser(){
+	void updateUser() {
 		User updateUser = new User();
 		updateUser.setId(1);
 		updateUser.setLogin("updateUser");

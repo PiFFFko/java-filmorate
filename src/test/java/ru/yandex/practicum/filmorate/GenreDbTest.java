@@ -19,23 +19,22 @@ public class GenreDbTest {
         private final GenreDbStorage genreDbStorage;
         private Genre testGenre;
 
-
         @Test
-        void getGenreById(){
+        void getGenreById() {
             testGenre = genreDbStorage.get(1);
             Assertions.assertThat(testGenre).hasFieldOrPropertyWithValue("id",1);
             Assertions.assertThat(testGenre).hasFieldOrPropertyWithValue("name", "Комедия");
         }
 
         @Test
-        void removeGenre(){
+        void removeGenre() {
             testGenre = genreDbStorage.get(1);
             genreDbStorage.remove(testGenre);
             Assertions.assertThatThrownBy(()-> genreDbStorage.get(1)).isInstanceOf(EntityNotExistException.class);
         }
 
         @Test
-        void updateGenre(){
+        void updateGenre() {
             Genre updateGenre = new Genre(1,"Ужасы");
             genreDbStorage.update(updateGenre);
             testGenre = genreDbStorage.get(1);

@@ -30,14 +30,14 @@ public class FilmValidationTest {
     }
 
     @Test
-    void blankNameShouldFailValidation(){
+    void blankNameShouldFailValidation() {
         film.setName("");
         Set<ConstraintViolation<Film>> violations =validator.validate(film);
         Assertions.assertFalse(violations.isEmpty());
     }
 
     @Test
-    void correctNameShouldPassValidation(){
+    void correctNameShouldPassValidation() {
         film.setName("Die Hard");
         film.setDuration(130);
         Set<ConstraintViolation<Film>> violations =validator.validate(film);
@@ -45,7 +45,7 @@ public class FilmValidationTest {
     }
 
     @Test
-    void descriptionMore200SymboldShouldFailValidation(){
+    void descriptionMore200SymboldShouldFailValidation() {
         film.setName("Die Hard");
         film.setDescription("«Крепкий орешек» - американский боевик 1988 года режиссёра " +
                 "Джон Мактирнан по сценарию Джеба Стюарта и Стивена де Соузы , " +
@@ -60,7 +60,7 @@ public class FilmValidationTest {
     }
 
     @Test
-    void dateBefor28December1895ShouldFailValidation(){
+    void dateBefor28December1895ShouldFailValidation() {
         film.setName("Die Hard");
         film.setReleaseDate(LocalDate.of(1800,1,1));
         film.setDuration(130);
@@ -69,7 +69,7 @@ public class FilmValidationTest {
     }
 
     @Test
-    void correctDateShouldPassValidation(){
+    void correctDateShouldPassValidation() {
         film.setName("Die Hard");
         film.setReleaseDate(LocalDate.of(1988,12,25));
         film.setDuration(130);
@@ -78,7 +78,7 @@ public class FilmValidationTest {
     }
 
     @Test
-    void negativeDurationShouldFailValidation(){
+    void negativeDurationShouldFailValidation() {
         film.setName("Die Hard");
         film.setDuration(-10);
         Set<ConstraintViolation<Film>> violations =validator.validate(film);
@@ -86,7 +86,7 @@ public class FilmValidationTest {
     }
 
     @Test
-    void zeroDurationShouldFailValidation(){
+    void zeroDurationShouldFailValidation() {
         film.setName("Die Hard");
         film.setDuration(0);
         Set<ConstraintViolation<Film>> violations =validator.validate(film);
@@ -94,7 +94,7 @@ public class FilmValidationTest {
     }
 
     @Test
-    void positiveDurationShouldPassValidation(){
+    void positiveDurationShouldPassValidation() {
         film.setName("Die Hard");
         film.setDuration(100);
         Set<ConstraintViolation<Film>> violations =validator.validate(film);
