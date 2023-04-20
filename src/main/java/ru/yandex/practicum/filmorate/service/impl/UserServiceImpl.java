@@ -20,7 +20,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     @Qualifier(value = "userDbStorage")
     private UserStorage userStorage;
-    private FriendStorage friendStorage;
 
     @Override
     public User get(Integer id) {

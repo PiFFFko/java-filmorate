@@ -3,6 +3,8 @@ package ru.yandex.practicum.filmorate;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.ConstraintViolation;
@@ -20,24 +22,17 @@ public class UserValidationTest {
     User user;
     @BeforeEach
     public void setUp(){
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        factory.getConstraintValidatorFactory();
-        validator = factory.getValidator();
+        try(ValidatorFactory factory = Validation.buildDefaultValidatorFactory()){
+            factory.getConstraintValidatorFactory();
+            validator = factory.getValidator();
+        }
         user = new User();
     }
 
-    @Test
-    public void blankEmailShouldFailValidation(){
-        User user = new User();
-        user.setEmail("");
-        user.setLogin(CORRECT_LOGIN);
-        Set<ConstraintViolation<User>> violations =validator.validate(user);
-        Assertions.assertFalse(violations.isEmpty());
-    }
-
-    @Test
-    public void incorrectFormatOfEmailShouldFailValidation(){
-        user.setEmail("mail");
+    @ParameterizedTest
+    @ValueSource(strings = {"","mail"})
+    public void incorrectFormatOfEmailShouldFailValidation(String mail){
+        user.setEmail(mail);
         user.setLogin(CORRECT_LOGIN);
         Set<ConstraintViolation<User>> violations =validator.validate(user);
         Assertions.assertFalse(violations.isEmpty());
@@ -51,18 +46,11 @@ public class UserValidationTest {
         Assertions.assertTrue(violations.isEmpty());
     }
 
-    @Test
-    public void blankLoginShouldFailValidation(){
+    @ParameterizedTest
+    @ValueSource(strings = {"","lo gin"})
+    public void incorrectLoginShouldFailValidation(String login){
         user.setEmail(CORRECT_MAIL);
-        user.setLogin("");
-        Set<ConstraintViolation<User>> violations =validator.validate(user);
-        Assertions.assertFalse(violations.isEmpty());
-    }
-
-    @Test
-    public void loginWithSpacesShouldFailValidation(){
-        user.setEmail(CORRECT_MAIL);
-        user.setLogin("lo gin");
+        user.setLogin(login);
         Set<ConstraintViolation<User>> violations =validator.validate(user);
         Assertions.assertFalse(violations.isEmpty());
     }

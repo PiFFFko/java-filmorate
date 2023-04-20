@@ -20,12 +20,12 @@ public class GenreController {
     }
 
     @PostMapping
-    private Genre createGenre(@RequestBody Genre genre) {
+    public Genre createGenre(@RequestBody Genre genre) {
         return genreService.create(genre);
     }
 
     @PutMapping
-    private Genre updateGenre(@RequestBody Genre genre) {
+    public Genre updateGenre(@RequestBody Genre genre) {
         return genreService.update(genre);
     }
 

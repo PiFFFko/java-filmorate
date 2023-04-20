@@ -22,9 +22,9 @@ import java.util.List;
 public class GenreDbStorage implements GenreStorage {
 
     private static final String GET_GENRE_QUERY = "select * from genres where genre_id = ?";
-    private static final String INSERT_GENRE_QUERY = "insert into genres (name) values (?)";
-    private static final String DELETE_GENRE_QUERY = "delete from genres where id = ?";
-    private static final String UPDATE_GENRE_QUERY = "update genres set name = ? where genres_id = ?";
+    private static final String INSERT_GENRE_QUERY = "insert into genres (genre_name) values (?)";
+    private static final String DELETE_GENRE_QUERY = "delete from genres where genre_id = ?";
+    private static final String UPDATE_GENRE_QUERY = "update genres set genre_name = ? where genre_id = ?";
     private static final String GET_ALL_GENRES_QUERY = "select * from genres";
     private static final String GENRE_NOT_EXIST_MESSAGE = "Жанра с id %s не существует";
     private final JdbcTemplate jdbcTemplate;

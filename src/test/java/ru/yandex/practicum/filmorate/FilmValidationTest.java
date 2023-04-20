@@ -17,28 +17,27 @@ import java.time.LocalDate;
 import java.util.Set;
 
 public class FilmValidationTest {
-    private static final String CORRECT_MAIL = "mail@mail.ru";
-    private static final String CORRECT_LOGIN = "login";
     private Validator validator;
     Film film;
 
     @BeforeEach
-    public void setUp(){
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        factory.getConstraintValidatorFactory();
-        validator = factory.getValidator();
+    void setUp(){
+        try(ValidatorFactory factory = Validation.buildDefaultValidatorFactory()){
+            factory.getConstraintValidatorFactory();
+            validator = factory.getValidator();
+        }
         film = new Film();
     }
 
     @Test
-    public void blankNameShouldFailValidation(){
+    void blankNameShouldFailValidation(){
         film.setName("");
         Set<ConstraintViolation<Film>> violations =validator.validate(film);
         Assertions.assertFalse(violations.isEmpty());
     }
 
     @Test
-    public void correctNameShouldPassValidation(){
+    void correctNameShouldPassValidation(){
         film.setName("Die Hard");
         film.setDuration(130);
         Set<ConstraintViolation<Film>> violations =validator.validate(film);
@@ -46,7 +45,7 @@ public class FilmValidationTest {
     }
 
     @Test
-    public void descriptionMore200SymboldShouldFailValidation(){
+    void descriptionMore200SymboldShouldFailValidation(){
         film.setName("Die Hard");
         film.setDescription("«Крепкий орешек» - американский боевик 1988 года режиссёра " +
                 "Джон Мактирнан по сценарию Джеба Стюарта и Стивена де Соузы , " +
@@ -61,7 +60,7 @@ public class FilmValidationTest {
     }
 
     @Test
-    public void dateBefor28December1895ShouldFailValidation(){
+    void dateBefor28December1895ShouldFailValidation(){
         film.setName("Die Hard");
         film.setReleaseDate(LocalDate.of(1800,1,1));
         film.setDuration(130);
@@ -70,7 +69,7 @@ public class FilmValidationTest {
     }
 
     @Test
-    public void correctDateShouldPassValidation(){
+    void correctDateShouldPassValidation(){
         film.setName("Die Hard");
         film.setReleaseDate(LocalDate.of(1988,12,25));
         film.setDuration(130);
@@ -79,7 +78,7 @@ public class FilmValidationTest {
     }
 
     @Test
-    public void negativeDurationShouldFailValidation(){
+    void negativeDurationShouldFailValidation(){
         film.setName("Die Hard");
         film.setDuration(-10);
         Set<ConstraintViolation<Film>> violations =validator.validate(film);
@@ -87,7 +86,7 @@ public class FilmValidationTest {
     }
 
     @Test
-    public void zeroDurationShouldFailValidation(){
+    void zeroDurationShouldFailValidation(){
         film.setName("Die Hard");
         film.setDuration(0);
         Set<ConstraintViolation<Film>> violations =validator.validate(film);
@@ -95,7 +94,7 @@ public class FilmValidationTest {
     }
 
     @Test
-    public void positiveDurationShouldPassValidation(){
+    void positiveDurationShouldPassValidation(){
         film.setName("Die Hard");
         film.setDuration(100);
         Set<ConstraintViolation<Film>> violations =validator.validate(film);

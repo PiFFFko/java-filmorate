@@ -41,7 +41,7 @@ public class UserDbStorage implements UserStorage {
     private static final String GET_USER_QUERY = "select * from users where user_id = ?";
     private static final String INSERT_USER_QUERY = "insert into users(login, name, email, birthday) " +
             "values (?, ?, ?, ?)";
-    private static final String DELETE_USER_QUERY = "delete from users where id = ?";
+    private static final String DELETE_USER_QUERY = "delete from users where user_id = ?";
     private static final String UPDATE_USER_QUERY = "update users set email = ?, login = ?, name = ?, birthday = ? " +
             "where user_id = ?;";
     private static final String GET_ALL_USERS_QUERY = "select * from users";

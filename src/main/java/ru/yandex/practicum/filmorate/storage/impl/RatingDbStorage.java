@@ -22,9 +22,9 @@ import java.util.List;
 public class RatingDbStorage implements RatingStorage {
 
     private static final String GET_RATING_QUERY = "select * from ratings where rating_id = ?";
-    private static final String INSERT_RATING_QUERY = "insert into ratings (name) values (?)";
+    private static final String INSERT_RATING_QUERY = "insert into ratings(rating_name) values (?)";
     private static final String DELETE_RATING_QUERY = "delete from ratings where rating_id = ?";
-    private static final String UPDATE_RATING_QUERY = "update ratings set name = ? where rating_id =?";
+    private static final String UPDATE_RATING_QUERY = "update ratings set rating_name = ? where rating_id =?";
     private static final String GET_ALL_RATINGS_QUERY = "select * from ratings";
     private static final String RATING_NOT_EXIST_MESSAGE = "Рейтинга с id %s не существует";
     private final JdbcTemplate jdbcTemplate;
