@@ -16,31 +16,31 @@ import ru.yandex.practicum.filmorate.storage.impl.GenreDbStorage;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class GenreDbTest {
-        private final GenreDbStorage genreDbStorage;
-        private Genre testGenre;
+    private final GenreDbStorage genreDbStorage;
+    private Genre testGenre;
 
-        @Test
-        void getGenreById() {
-            testGenre = genreDbStorage.get(1);
-            Assertions.assertThat(testGenre).hasFieldOrPropertyWithValue("id",1);
-            Assertions.assertThat(testGenre).hasFieldOrPropertyWithValue("name", "Комедия");
-        }
+    @Test
+    void getGenreById() {
+        testGenre = genreDbStorage.get(1);
+        Assertions.assertThat(testGenre).hasFieldOrPropertyWithValue("id", 1);
+        Assertions.assertThat(testGenre).hasFieldOrPropertyWithValue("name", "Комедия");
+    }
 
-        @Test
-        void removeGenre() {
-            testGenre = genreDbStorage.get(1);
-            genreDbStorage.remove(testGenre);
-            Assertions.assertThatThrownBy(()-> genreDbStorage.get(1)).isInstanceOf(EntityNotExistException.class);
-        }
+    @Test
+    void removeGenre() {
+        testGenre = genreDbStorage.get(1);
+        genreDbStorage.remove(testGenre);
+        Assertions.assertThatThrownBy(() -> genreDbStorage.get(1)).isInstanceOf(EntityNotExistException.class);
+    }
 
-        @Test
-        void updateGenre() {
-            Genre updateGenre = new Genre(1,"Ужасы");
-            genreDbStorage.update(updateGenre);
-            testGenre = genreDbStorage.get(1);
-            Assertions.assertThat(testGenre).hasFieldOrPropertyWithValue("id",1);
-            Assertions.assertThat(testGenre).hasFieldOrPropertyWithValue("name", "Ужасы");
-
-        }
+    @Test
+    void updateGenre() {
+        Genre updateGenre = new Genre(1, "Ужасы");
+        genreDbStorage.update(updateGenre);
+        testGenre = genreDbStorage.get(1);
+        Assertions.assertThat(testGenre).hasFieldOrPropertyWithValue("id", 1);
+        Assertions.assertThat(testGenre).hasFieldOrPropertyWithValue("name", "Ужасы");
 
     }
+
+}

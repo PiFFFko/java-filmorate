@@ -20,45 +20,45 @@ import java.time.LocalDate;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class UserDbTest {
 
-	private final UserDbStorage userDbStorage;
-	private User testUser;
+    private final UserDbStorage userDbStorage;
+    private User testUser;
 
-	@BeforeEach
-	void addUser() {
-		testUser = new User();
-		testUser.setEmail("test@test.ru");
-		testUser.setLogin("test");
-		testUser.setBirthday(LocalDate.now());
-		userDbStorage.add(testUser);
-	}
+    @BeforeEach
+    void addUser() {
+        testUser = new User();
+        testUser.setEmail("test@test.ru");
+        testUser.setLogin("test");
+        testUser.setBirthday(LocalDate.now());
+        userDbStorage.add(testUser);
+    }
 
-	@Test
-	void getUserById() {
-		testUser = userDbStorage.get(1);
-		Assertions.assertThat(testUser).hasFieldOrPropertyWithValue("id",1);
-		Assertions.assertThat(testUser).hasFieldOrPropertyWithValue("email", "test@test.ru");
-		Assertions.assertThat(testUser).hasFieldOrPropertyWithValue("login", "test");
-	}
+    @Test
+    void getUserById() {
+        testUser = userDbStorage.get(1);
+        Assertions.assertThat(testUser).hasFieldOrPropertyWithValue("id", 1);
+        Assertions.assertThat(testUser).hasFieldOrPropertyWithValue("email", "test@test.ru");
+        Assertions.assertThat(testUser).hasFieldOrPropertyWithValue("login", "test");
+    }
 
-	@Test
-	void removeUser() {
-		testUser.setId(1);
-		userDbStorage.remove(testUser);
-		Assertions.assertThatThrownBy(()-> userDbStorage.get(1)).isInstanceOf(EntityNotExistException.class);
-	}
+    @Test
+    void removeUser() {
+        testUser.setId(1);
+        userDbStorage.remove(testUser);
+        Assertions.assertThatThrownBy(() -> userDbStorage.get(1)).isInstanceOf(EntityNotExistException.class);
+    }
 
-	@Test
-	void updateUser() {
-		User updateUser = new User();
-		updateUser.setId(1);
-		updateUser.setLogin("updateUser");
-		updateUser.setEmail("update@update.ru");
-		updateUser.setBirthday(LocalDate.now());
-		userDbStorage.update(updateUser);
-		testUser = userDbStorage.get(1);
-		Assertions.assertThat(testUser).hasFieldOrPropertyWithValue("id",1);
-		Assertions.assertThat(testUser).hasFieldOrPropertyWithValue("email", "update@update.ru");
-		Assertions.assertThat(testUser).hasFieldOrPropertyWithValue("login", "updateUser");
-	}
+    @Test
+    void updateUser() {
+        User updateUser = new User();
+        updateUser.setId(1);
+        updateUser.setLogin("updateUser");
+        updateUser.setEmail("update@update.ru");
+        updateUser.setBirthday(LocalDate.now());
+        userDbStorage.update(updateUser);
+        testUser = userDbStorage.get(1);
+        Assertions.assertThat(testUser).hasFieldOrPropertyWithValue("id", 1);
+        Assertions.assertThat(testUser).hasFieldOrPropertyWithValue("email", "update@update.ru");
+        Assertions.assertThat(testUser).hasFieldOrPropertyWithValue("login", "updateUser");
+    }
 
 }

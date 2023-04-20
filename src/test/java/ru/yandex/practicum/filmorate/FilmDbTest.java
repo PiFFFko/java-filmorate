@@ -29,24 +29,24 @@ public class FilmDbTest {
     void addFilm() {
         testFilm = new Film();
         testFilm.setName("Die Hard");
-        testFilm.setReleaseDate(LocalDate.of(1988, Month.JULY,12));
-        testFilm.setMpa(new Rating(4,"R"));
+        testFilm.setReleaseDate(LocalDate.of(1988, Month.JULY, 12));
+        testFilm.setMpa(new Rating(4, "R"));
         filmDbStorage.add(testFilm);
     }
 
     @Test
     void getFilmById() {
         testFilm = filmDbStorage.get(1);
-        Assertions.assertThat(testFilm).hasFieldOrPropertyWithValue("id",1);
+        Assertions.assertThat(testFilm).hasFieldOrPropertyWithValue("id", 1);
         Assertions.assertThat(testFilm).hasFieldOrPropertyWithValue("name", "Die Hard");
-        Assertions.assertThat(testFilm).hasFieldOrPropertyWithValue("releaseDate", LocalDate.of(1988, Month.JULY,12));
+        Assertions.assertThat(testFilm).hasFieldOrPropertyWithValue("releaseDate", LocalDate.of(1988, Month.JULY, 12));
     }
 
     @Test
     void removeFilm() {
         testFilm.setId(1);
         filmDbStorage.remove(testFilm);
-        Assertions.assertThatThrownBy(()-> filmDbStorage.get(1)).isInstanceOf(EntityNotExistException.class);
+        Assertions.assertThatThrownBy(() -> filmDbStorage.get(1)).isInstanceOf(EntityNotExistException.class);
     }
 
     @Test
@@ -55,10 +55,10 @@ public class FilmDbTest {
         updateFilm.setId(1);
         updateFilm.setName("Terminator 2 Judgement Day");
         updateFilm.setReleaseDate(LocalDate.of(1999, Month.JULY, 1));
-        updateFilm.setMpa(new Rating(4,"R"));
+        updateFilm.setMpa(new Rating(4, "R"));
         filmDbStorage.update(updateFilm);
         testFilm = filmDbStorage.get(1);
-        Assertions.assertThat(testFilm).hasFieldOrPropertyWithValue("id",1);
+        Assertions.assertThat(testFilm).hasFieldOrPropertyWithValue("id", 1);
         Assertions.assertThat(testFilm).hasFieldOrPropertyWithValue("name", "Terminator 2 Judgement Day");
         Assertions.assertThat(testFilm).hasFieldOrPropertyWithValue("releaseDate", LocalDate.of(1999, Month.JULY, 1));
 

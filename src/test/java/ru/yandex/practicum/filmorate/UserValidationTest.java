@@ -18,11 +18,12 @@ import java.util.Set;
 public class UserValidationTest {
     private static final String CORRECT_MAIL = "mail@mail.ru";
     private static final String CORRECT_LOGIN = "login";
-    private Validator validator;
     User user;
+    private Validator validator;
+
     @BeforeEach
     public void setUp() {
-        try(ValidatorFactory factory = Validation.buildDefaultValidatorFactory()){
+        try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
             factory.getConstraintValidatorFactory();
             validator = factory.getValidator();
         }
@@ -30,11 +31,11 @@ public class UserValidationTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"","mail"})
+    @ValueSource(strings = {"", "mail"})
     public void incorrectFormatOfEmailShouldFailValidation(String mail) {
         user.setEmail(mail);
         user.setLogin(CORRECT_LOGIN);
-        Set<ConstraintViolation<User>> violations =validator.validate(user);
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
         Assertions.assertFalse(violations.isEmpty());
     }
 
@@ -42,16 +43,16 @@ public class UserValidationTest {
     public void correctMailShouldPassValidation() {
         user.setEmail(CORRECT_MAIL);
         user.setLogin(CORRECT_LOGIN);
-        Set<ConstraintViolation<User>> violations =validator.validate(user);
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
         Assertions.assertTrue(violations.isEmpty());
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"","lo gin"})
+    @ValueSource(strings = {"", "lo gin"})
     public void incorrectLoginShouldFailValidation(String login) {
         user.setEmail(CORRECT_MAIL);
         user.setLogin(login);
-        Set<ConstraintViolation<User>> violations =validator.validate(user);
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
         Assertions.assertFalse(violations.isEmpty());
     }
 
@@ -59,26 +60,26 @@ public class UserValidationTest {
     public void correctLoginShouldPassValidation() {
         user.setEmail(CORRECT_MAIL);
         user.setLogin(CORRECT_LOGIN);
-        Set<ConstraintViolation<User>> violations =validator.validate(user);
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
         Assertions.assertTrue(violations.isEmpty());
     }
 
-   @Test
-   public void dateInTheFutureShouldFailValidation() {
-       user.setEmail(CORRECT_MAIL);
-       user.setLogin(CORRECT_LOGIN);
-       user.setBirthday(LocalDate.now().plusDays(1));
-       Set<ConstraintViolation<User>> violations =validator.validate(user);
-       Assertions.assertFalse(violations.isEmpty());
-   }
+    @Test
+    public void dateInTheFutureShouldFailValidation() {
+        user.setEmail(CORRECT_MAIL);
+        user.setLogin(CORRECT_LOGIN);
+        user.setBirthday(LocalDate.now().plusDays(1));
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        Assertions.assertFalse(violations.isEmpty());
+    }
 
-   @Test
+    @Test
     public void correctDateShouldPassValidation() {
-       user.setEmail(CORRECT_MAIL);
-       user.setLogin(CORRECT_LOGIN);
-       user.setBirthday(LocalDate.now().minusDays(1));
-       Set<ConstraintViolation<User>> violations =validator.validate(user);
-       Assertions.assertTrue(violations.isEmpty());
-   }
+        user.setEmail(CORRECT_MAIL);
+        user.setLogin(CORRECT_LOGIN);
+        user.setBirthday(LocalDate.now().minusDays(1));
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        Assertions.assertTrue(violations.isEmpty());
+    }
 
 }

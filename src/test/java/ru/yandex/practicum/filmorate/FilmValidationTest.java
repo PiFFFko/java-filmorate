@@ -1,28 +1,25 @@
 package ru.yandex.practicum.filmorate;
 
 
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import java.awt.image.FilteredImageSource;
 import java.time.LocalDate;
 import java.util.Set;
 
 public class FilmValidationTest {
-    private Validator validator;
     Film film;
+    private Validator validator;
 
     @BeforeEach
-    void setUp(){
-        try(ValidatorFactory factory = Validation.buildDefaultValidatorFactory()){
+    void setUp() {
+        try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
             factory.getConstraintValidatorFactory();
             validator = factory.getValidator();
         }
@@ -32,7 +29,7 @@ public class FilmValidationTest {
     @Test
     void blankNameShouldFailValidation() {
         film.setName("");
-        Set<ConstraintViolation<Film>> violations =validator.validate(film);
+        Set<ConstraintViolation<Film>> violations = validator.validate(film);
         Assertions.assertFalse(violations.isEmpty());
     }
 
@@ -40,7 +37,7 @@ public class FilmValidationTest {
     void correctNameShouldPassValidation() {
         film.setName("Die Hard");
         film.setDuration(130);
-        Set<ConstraintViolation<Film>> violations =validator.validate(film);
+        Set<ConstraintViolation<Film>> violations = validator.validate(film);
         Assertions.assertTrue(violations.isEmpty());
     }
 
@@ -55,25 +52,25 @@ public class FilmValidationTest {
                 "исполняющие второстепенные роли. Фильм рассказывает о детективе полиции Нью-Йорка Джоне Макклейне, " +
                 "который попал в террористический захват небоскреба " +
                 "Лос-Анджелеса во время посещения своей отчуждённой жены.");
-        Set<ConstraintViolation<Film>> violations =validator.validate(film);
+        Set<ConstraintViolation<Film>> violations = validator.validate(film);
         Assertions.assertFalse(violations.isEmpty());
     }
 
     @Test
     void dateBefor28December1895ShouldFailValidation() {
         film.setName("Die Hard");
-        film.setReleaseDate(LocalDate.of(1800,1,1));
+        film.setReleaseDate(LocalDate.of(1800, 1, 1));
         film.setDuration(130);
-        Set<ConstraintViolation<Film>> violations =validator.validate(film);
+        Set<ConstraintViolation<Film>> violations = validator.validate(film);
         Assertions.assertFalse(violations.isEmpty());
     }
 
     @Test
     void correctDateShouldPassValidation() {
         film.setName("Die Hard");
-        film.setReleaseDate(LocalDate.of(1988,12,25));
+        film.setReleaseDate(LocalDate.of(1988, 12, 25));
         film.setDuration(130);
-        Set<ConstraintViolation<Film>> violations =validator.validate(film);
+        Set<ConstraintViolation<Film>> violations = validator.validate(film);
         Assertions.assertTrue(violations.isEmpty());
     }
 
@@ -81,7 +78,7 @@ public class FilmValidationTest {
     void negativeDurationShouldFailValidation() {
         film.setName("Die Hard");
         film.setDuration(-10);
-        Set<ConstraintViolation<Film>> violations =validator.validate(film);
+        Set<ConstraintViolation<Film>> violations = validator.validate(film);
         Assertions.assertFalse(violations.isEmpty());
     }
 
@@ -89,7 +86,7 @@ public class FilmValidationTest {
     void zeroDurationShouldFailValidation() {
         film.setName("Die Hard");
         film.setDuration(0);
-        Set<ConstraintViolation<Film>> violations =validator.validate(film);
+        Set<ConstraintViolation<Film>> violations = validator.validate(film);
         Assertions.assertFalse(violations.isEmpty());
     }
 
@@ -97,7 +94,7 @@ public class FilmValidationTest {
     void positiveDurationShouldPassValidation() {
         film.setName("Die Hard");
         film.setDuration(100);
-        Set<ConstraintViolation<Film>> violations =validator.validate(film);
+        Set<ConstraintViolation<Film>> violations = validator.validate(film);
         Assertions.assertTrue(violations.isEmpty());
     }
 }

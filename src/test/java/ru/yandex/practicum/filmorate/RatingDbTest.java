@@ -24,7 +24,7 @@ public class RatingDbTest {
     @Test
     void getRatingById() {
         testRating = ratingDbStorage.get(1);
-        Assertions.assertThat(testRating).hasFieldOrPropertyWithValue("id",1);
+        Assertions.assertThat(testRating).hasFieldOrPropertyWithValue("id", 1);
         Assertions.assertThat(testRating).hasFieldOrPropertyWithValue("name", "G");
     }
 
@@ -32,15 +32,15 @@ public class RatingDbTest {
     void removeRating() {
         testRating = ratingDbStorage.get(1);
         ratingDbStorage.remove(testRating);
-        Assertions.assertThatThrownBy(()-> ratingDbStorage.get(1)).isInstanceOf(EntityNotExistException.class);
+        Assertions.assertThatThrownBy(() -> ratingDbStorage.get(1)).isInstanceOf(EntityNotExistException.class);
     }
 
     @Test
     void updateRating() {
-        Rating updateRating = new Rating(1,"X");
+        Rating updateRating = new Rating(1, "X");
         ratingDbStorage.update(updateRating);
         testRating = ratingDbStorage.get(1);
-        Assertions.assertThat(testRating).hasFieldOrPropertyWithValue("id",1);
+        Assertions.assertThat(testRating).hasFieldOrPropertyWithValue("id", 1);
         Assertions.assertThat(testRating).hasFieldOrPropertyWithValue("name", "X");
 
     }
