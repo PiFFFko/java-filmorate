@@ -36,13 +36,13 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public Film create(Film film) {
-            film.setGenres(film.getGenres().stream().distinct().collect(Collectors.toList()));
+        film.setGenres(film.getGenres().stream().distinct().collect(Collectors.toList()));
         return filmStorage.add(film);
     }
 
     @Override
     public Film update(Film film) {
-            film.setGenres(film.getGenres().stream().distinct().collect(Collectors.toList()));
+        film.setGenres(film.getGenres().stream().distinct().collect(Collectors.toList()));
         return filmStorage.update(film);
     }
 
@@ -54,5 +54,10 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public Collection<Film> getPopular(Integer count) {
         return filmStorage.getPopular(count);
+    }
+
+    @Override
+    public Film remove(Integer id) {
+        return filmStorage.remove(get(id));
     }
 }

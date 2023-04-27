@@ -42,7 +42,7 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film remove(Film film) {
-        return null;
+        return films.remove(film.getId());
     }
 
     @Override
@@ -75,7 +75,7 @@ public class InMemoryFilmStorage implements FilmStorage {
             return films.get(id);
         }
         throw new EntityNotExistException(
-                String.format("Пользователя с id %s или фильма с id %s не существует",userId,id));
+                String.format("Пользователя с id %s или фильма с id %s не существует", userId, id));
     }
 
     public Film deleteLike(Integer id, Integer userId) {
@@ -86,7 +86,7 @@ public class InMemoryFilmStorage implements FilmStorage {
             return films.get(id);
         }
         throw new EntityNotExistException(
-                String.format("Пользователя с id %s или фильма с id %s не существует",userId,id));
+                String.format("Пользователя с id %s или фильма с id %s не существует", userId, id));
     }
 
     @Override
