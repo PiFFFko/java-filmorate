@@ -7,4 +7,6 @@ import java.util.Collection;
 public interface FilmService extends BaseService<Film> {
     Collection<Film> getPopular(Integer count);
 
+    Collection<Film> getCommonFilms(Integer userId, Integer friendId);
+
 }

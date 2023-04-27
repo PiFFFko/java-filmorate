@@ -55,4 +55,9 @@ public class FilmServiceImpl implements FilmService {
     public Collection<Film> getPopular(Integer count) {
         return filmStorage.getPopular(count);
     }
+
+    @Override
+    public Collection<Film> getCommonFilms(Integer userId, Integer friendId) {
+        return filmStorage.getCommonFilms(userId, friendId);
+    }
 }

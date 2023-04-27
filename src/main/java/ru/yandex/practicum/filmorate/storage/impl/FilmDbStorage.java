@@ -52,6 +52,18 @@ public class FilmDbStorage implements FilmStorage {
     private static final String DELETE_FILM_GENRES = "delete from film_category where film_id = ?";
     private static final String GET_FILM_GENRES = "select * from genres inner join film_category on " +
             "genres.genre_id = film_category.genre_id  where film_id = ?";
+
+    private static final String GET_COMMON_FILMS = "select f.film_id, description, name, release_date, duration, f.rating_id, rating_name " +
+            "from films f " +
+            "inner join ratings r on r.rating_id = f.rating_id " +
+            "inner join likes l on l.film_id = f.film_id " +
+            "where l.user_id = ? " +
+            "intersect " +
+            "select f.film_id, description, name, release_date, duration, f.rating_id, rating_name " +
+            "from films f " +
+            "inner join ratings r on r.rating_id = f.rating_id " +
+            "inner join likes l on l.film_id = f.film_id " +
+            "where l.user_id = ?";
     private final JdbcTemplate jdbcTemplate;
 
     @Override
@@ -141,5 +153,10 @@ public class FilmDbStorage implements FilmStorage {
     public Collection<Film> getPopular(Integer count) {
         List<Film> films = jdbcTemplate.query(GET_POPULAR_FILMS_QUERY, (rs, rowNum) -> makeFilmFromComplexTable(rs));
         return films.stream().limit(count).collect(Collectors.toList());
+    }
+
+    @Override
+    public Collection<Film> getCommonFilms(Integer userId, Integer friendId) {
+        return jdbcTemplate.query(GET_COMMON_FILMS, (rs, rowNum) -> makeFilmFromComplexTable(rs), userId, friendId);
     }
 }
