@@ -2,8 +2,6 @@ package ru.yandex.practicum.filmorate.storage.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.EntityNotExistException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -17,18 +15,16 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class InMemoryFilmStorage implements FilmStorage {
-
-    private Map<Integer, Film> films = new HashMap<>();
+    private final UserStorage userStorage;
+    private final Map<Integer, Film> films = new HashMap<>();
     private Integer idGenerator = 1;
-    @Autowired
-    @Qualifier("userDbStorage")
-    private UserStorage userStorage;
 
     @Override
     public Film get(Integer id) {
         log.info("Запрос на получение фильма c id {}", id);
-        if (films.containsKey(id))
+        if (films.containsKey(id)) {
             return films.get(id);
+        }
         throw new EntityNotExistException(String.format("Фильма с id %s не существует", id));
     }
 
@@ -74,8 +70,7 @@ public class InMemoryFilmStorage implements FilmStorage {
             films.get(id).setLikesFromUsers(likes);
             return films.get(id);
         }
-        throw new EntityNotExistException(
-                String.format("Пользователя с id %s или фильма с id %s не существует",userId,id));
+        throw new EntityNotExistException(String.format("Пользователя с id %s или фильма с id %s не существует", userId, id));
     }
 
     public Film deleteLike(Integer id, Integer userId) {
@@ -85,8 +80,7 @@ public class InMemoryFilmStorage implements FilmStorage {
             films.get(id).setLikesFromUsers(likes);
             return films.get(id);
         }
-        throw new EntityNotExistException(
-                String.format("Пользователя с id %s или фильма с id %s не существует",userId,id));
+        throw new EntityNotExistException(String.format("Пользователя с id %s или фильма с id %s не существует", userId, id));
     }
 
     @Override
@@ -95,5 +89,10 @@ public class InMemoryFilmStorage implements FilmStorage {
                 .sorted(Comparator.comparing(Film::getPopularity).reversed())
                 .limit(count)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Collection<Film> getDirectorsFilms(Integer directorId, String sortBy) {
+        return null;
     }
 }

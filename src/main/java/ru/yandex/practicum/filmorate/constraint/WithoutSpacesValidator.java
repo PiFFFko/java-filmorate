@@ -6,7 +6,6 @@ import javax.validation.ConstraintValidatorContext;
 public class WithoutSpacesValidator implements ConstraintValidator<WithoutSpaces, String> {
 
     public WithoutSpacesValidator() {
-
     }
 
     @Override
