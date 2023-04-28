@@ -1,15 +1,15 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.*;
-import lombok.experimental.FieldDefaults;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-@Setter
-@Getter
-@EqualsAndHashCode
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@Data
+@Builder
 @AllArgsConstructor
+@EqualsAndHashCode(of = "id")
 public class Genre {
-    int id;
-    @EqualsAndHashCode.Exclude String name;
-
+    private int id;
+    private String name;
 }
