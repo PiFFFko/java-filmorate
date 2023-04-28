@@ -9,5 +9,4 @@ public class FriendRequest {
     private int userIdFrom;
     private int userIdTo;
     private boolean friendStatus;
-
 }

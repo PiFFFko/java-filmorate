@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.EntityNotExistException;
 import ru.yandex.practicum.filmorate.model.FriendRequest;
@@ -12,12 +11,10 @@ import ru.yandex.practicum.filmorate.service.UserService;
 import javax.validation.Valid;
 import java.util.Collection;
 
-@Slf4j
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping(value = "/users")
 public class UserController {
-
     private final UserService userService;
     private final FriendService friendService;
 
@@ -43,7 +40,7 @@ public class UserController {
 
     @PutMapping("/{id}/friends/{friendId}")
     public FriendRequest addFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
-       return friendService.addFriend(id, friendId);
+        return friendService.addFriend(id, friendId);
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")
@@ -60,5 +57,4 @@ public class UserController {
     public Collection<User> getCommonFriends(@PathVariable Integer id, @PathVariable Integer otherId) {
         return userService.getCommonFriends(id, otherId);
     }
-
 }

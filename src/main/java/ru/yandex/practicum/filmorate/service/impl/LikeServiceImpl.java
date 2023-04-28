@@ -9,7 +9,6 @@ import ru.yandex.practicum.filmorate.storage.LikeStorage;
 @Service
 @RequiredArgsConstructor
 public class LikeServiceImpl implements LikeService {
-
     private final LikeStorage likeStorage;
 
     @Override
@@ -19,6 +18,6 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     public Like deleteLike(Integer filmId, Integer userId) {
-        return likeStorage.deleteLike(filmId,userId);
+        return likeStorage.deleteLike(filmId, userId);
     }
 }

@@ -8,5 +8,4 @@ import lombok.Data;
 public class Like {
     private int filmId;
     private int userId;
-
 }

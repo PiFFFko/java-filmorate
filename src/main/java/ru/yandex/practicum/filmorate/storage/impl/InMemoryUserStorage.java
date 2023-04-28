@@ -12,8 +12,7 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 public class InMemoryUserStorage implements UserStorage {
-
-    private Map<Integer, User> users = new HashMap<>();
+    private final Map<Integer, User> users = new HashMap<>();
     private Integer idGenerator = 1;
 
     @Override
@@ -115,5 +114,4 @@ public class InMemoryUserStorage implements UserStorage {
         }
         throw new EntityNotExistException(String.format("Пользователя с id {} или {} не существует", id, otherId));
     }
-
 }
