@@ -47,4 +47,9 @@ public class UserServiceImpl implements UserService {
     public Collection<User> getCommonFriends(Integer id, Integer otherId) {
         return userStorage.getCommonFriends(id, otherId);
     }
+
+    @Override
+    public User remove(Integer id) {
+        return userStorage.remove(get(id));
+    }
 }

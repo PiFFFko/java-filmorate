@@ -38,6 +38,11 @@ public class UserController {
         return userService.get(id);
     }
 
+    @DeleteMapping("/{userId}")
+    public void deleteUser(@PathVariable Integer userId) {
+        userService.remove(userId);
+    }
+
     @PutMapping("/{id}/friends/{friendId}")
     public FriendRequest addFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
         return friendService.addFriend(id, friendId);

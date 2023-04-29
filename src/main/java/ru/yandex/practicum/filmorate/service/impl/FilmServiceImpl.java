@@ -45,4 +45,9 @@ public class FilmServiceImpl implements FilmService {
     public Collection<Film> getDirectorsFilms(Integer directorId, String sortBy) {
         return filmStorage.getDirectorsFilms(directorId, sortBy);
     }
+
+    @Override
+    public Film remove(Integer id) {
+        return filmStorage.remove(get(id));
+    }
 }

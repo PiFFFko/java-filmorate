@@ -48,6 +48,10 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public Collection<User> getFriends(Integer id) {
+        User user = get(id);
+        if (user == null) {
+            throw new EntityNotExistException(String.format("Пользователя с id %s не существует", id));
+        }
         return jdbcTemplate.query(GET_FRIENDS_QUERY, (rs, rowNum) -> makeUser(rs), id);
     }
 

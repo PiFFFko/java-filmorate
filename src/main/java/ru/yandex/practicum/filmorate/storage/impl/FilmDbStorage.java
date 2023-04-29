@@ -51,7 +51,7 @@ public class FilmDbStorage implements FilmStorage {
             "left join ratings r on r.rating_id = f.rating_id " +
             "left join film_category fc on fc.film_id = f.film_id " +
             "left join genres g on g.genre_id = fc.genre_id " +
-            "group by f.film_id " +
+            "group by fc.genre_id, f.film_id, l.user_id " +
             "order by count(l.user_id) desc";
     private static final String INSERT_FILM_GENRES = "insert into film_category(film_id, genre_id) values (?,?)";
     private static final String INSERT_FILM_DIRECTORS = "insert into film_director(film_id, director_id) values (?,?)";
