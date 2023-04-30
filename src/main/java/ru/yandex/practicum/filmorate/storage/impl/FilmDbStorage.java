@@ -21,11 +21,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
-
 @Primary
 @Component
 @RequiredArgsConstructor
+
 public class FilmDbStorage implements FilmStorage {
+
     private final DirectorStorage directorStorage;
     private final JdbcTemplate jdbcTemplate;
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -58,7 +59,7 @@ public class FilmDbStorage implements FilmStorage {
     private static final String DELETE_FILM_DIRECTORS = "delete from film_director where film_id = ?";
     private static final String GET_FILM_GENRES = "select * from genres inner join film_category on " +
             "genres.genre_id = film_category.genre_id  where film_id = ?";
-  private RatingDbStorage ratingDbStorage;
+    private RatingDbStorage ratingDbStorage;
     private static final String GET_FILM_DIRECTORS = "select * from DIRECTORS inner join FILM_DIRECTOR FD on " +
             "DIRECTORS.ID = FD.DIRECTOR_ID where film_id = ?";
     private static final String GET_DIRECTORS_FILMS_SORT_BY_YEAR = "select * from films f " +
@@ -93,7 +94,7 @@ public class FilmDbStorage implements FilmStorage {
         throw new EntityNotExistException(String.format(FILM_NOT_EXIST_MESSAGE, id));
     }
 
-      private List<Genre> getGenresForFilm(Integer filmId) {
+    private List<Genre> getGenresForFilm(Integer filmId) {
         return jdbcTemplate.query(GET_FILM_GENRES, (rs, rowNum) -> makeGenre(rs), filmId);
     }
 
@@ -185,6 +186,7 @@ public class FilmDbStorage implements FilmStorage {
         List<Film> films = jdbcTemplate.query(GET_POPULAR_FILMS_QUERY, this::makeFilmFromComplexTable);
         return films.stream().limit(count).collect(Collectors.toList());
     }
+
     @Override
     public Genre mapRowToGenre(ResultSet resultSet, int rowNum) throws SQLException {
         return Genre.builder()
@@ -192,6 +194,7 @@ public class FilmDbStorage implements FilmStorage {
                 .name(resultSet.getString("GENRE_NAME"))
                 .build();
     }
+
     @Override
     public Set<Genre> getFilmGenresFromDB(int filmId) {
         String sqlQuery = "select G.GENRE_ID, G.GENRE_NAME " +
@@ -200,6 +203,7 @@ public class FilmDbStorage implements FilmStorage {
                 "group by G.GENRE_ID";
         return new HashSet<>(jdbcTemplate.query(sqlQuery, this::mapRowToGenre, filmId));
     }
+
     @Override
     public Film makeFilmFromComplexTable(ResultSet resultSet, int rowNum) throws SQLException {
         return Film.builder()
@@ -214,8 +218,8 @@ public class FilmDbStorage implements FilmStorage {
                 .directors(getFilmDirectorsFromDB(resultSet.getInt("film_id")))
                 .build();
     }
-
-    private Set<Director> getFilmDirectorsFromDB(int filmid) {
+    @Override
+    public Set<Director> getFilmDirectorsFromDB(int filmid) {
         String sqlQuery = "SELECT d.id, d.name " +
                 "FROM FILM_DIRECTOR AS fd " +
                 "JOIN DIRECTORS AS d on fd.director_id = d.id " +
@@ -223,8 +227,8 @@ public class FilmDbStorage implements FilmStorage {
                 "GROUP BY d.id";
         return new HashSet<>(jdbcTemplate.query(sqlQuery, this::mapRowToDirector, filmid));
     }
-
-    private Director mapRowToDirector(ResultSet rs, int rowNum) throws SQLException {
+    @Override
+    public Director mapRowToDirector(ResultSet rs, int rowNum) throws SQLException {
         return Director.builder()
                 .id(rs.getInt("id"))
                 .name(rs.getString("name"))

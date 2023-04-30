@@ -2,10 +2,9 @@ package ru.yandex.practicum.filmorate.storage.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.EntityNotExistException;
+import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
@@ -108,6 +107,16 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film makeFilmFromComplexTable(ResultSet resultSet, int rowNum) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public Set<Director> getFilmDirectorsFromDB(int filmid) {
+        return null;
+    }
+
+    @Override
+    public Director mapRowToDirector(ResultSet rs, int rowNum) throws SQLException {
         return null;
     }
 
