@@ -16,7 +16,9 @@ import java.util.Collection;
 @AllArgsConstructor
 @RestController
 @RequestMapping(value = "/films")
+
 public class FilmController {
+
     @Autowired
     private final FilmService filmService;
     private final LikeService likeService;
@@ -58,11 +60,12 @@ public class FilmController {
 
     @GetMapping("/popular")
     public Collection<Film> getPopular(@RequestParam(defaultValue = "10") int count,
-                                @RequestParam(defaultValue = "0") int genreId,
-                                @RequestParam(defaultValue = "0") int year) {
+                                       @RequestParam(defaultValue = "0") int genreId,
+                                       @RequestParam(defaultValue = "0") int year) {
 
         return filmService.getPopular(count, genreId, year);
     }
+
     @GetMapping("/director/{directorId}")
     public Collection<Film> getDirectorsFilms(@PathVariable Integer directorId, @RequestParam String sortBy) {
         return filmService.getDirectorsFilms(directorId, sortBy);
