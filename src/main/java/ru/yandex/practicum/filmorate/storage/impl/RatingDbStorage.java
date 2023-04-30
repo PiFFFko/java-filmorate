@@ -32,11 +32,10 @@ public class RatingDbStorage implements RatingStorage {
     private static final String RATING_NOT_EXIST_MESSAGE = "Рейтинга с id %s не существует";
 
 
-
     @Override
     public Rating get(Integer id) {
         List<Rating> ratings = jdbcTemplate.query(GET_RATING_QUERY, (rs, rowNum) -> makeRating(rs), id);
-        if (!ratings.isEmpty()){
+        if (!ratings.isEmpty()) {
             return ratings.stream().findFirst().get();
         }
         throw new EntityNotExistException(String.format(RATING_NOT_EXIST_MESSAGE, id));
@@ -65,7 +64,7 @@ public class RatingDbStorage implements RatingStorage {
     public Rating update(Rating rating) {
         if (jdbcTemplate.update(UPDATE_RATING_QUERY,
                 rating.getName(),
-                rating.getId()) > 0){
+                rating.getId()) > 0) {
             return rating;
         }
         throw new EntityNotExistException(String.format(RATING_NOT_EXIST_MESSAGE, rating.getId()));
