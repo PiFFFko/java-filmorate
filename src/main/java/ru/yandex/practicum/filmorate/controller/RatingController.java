@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.model.Mpa;
+import ru.yandex.practicum.filmorate.model.Rating;
 import ru.yandex.practicum.filmorate.service.RatingService;
 
 import java.util.Collection;
@@ -14,22 +14,22 @@ public class RatingController {
     private final RatingService ratingService;
 
     @GetMapping
-    public Collection<Mpa> getAllRating() {
+    public Collection<Rating> getAllRating() {
         return ratingService.getAll();
     }
 
     @PostMapping
-    private Mpa createRating(@RequestBody Mpa genre) {
+    private Rating createRating(@RequestBody Rating genre) {
         return ratingService.create(genre);
     }
 
     @PutMapping
-    private Mpa updateRating(@RequestBody Mpa genre) {
+    private Rating updateRating(@RequestBody Rating genre) {
         return ratingService.update(genre);
     }
 
     @GetMapping("/{id}")
-    public Mpa getRating(@PathVariable Integer id) {
+    public Rating getRating(@PathVariable Integer id) {
         return ratingService.get(id);
     }
 }

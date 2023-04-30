@@ -8,7 +8,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import ru.yandex.practicum.filmorate.exception.EntityNotExistException;
-import ru.yandex.practicum.filmorate.model.Mpa;
+import ru.yandex.practicum.filmorate.model.Rating;
 import ru.yandex.practicum.filmorate.storage.impl.RatingDbStorage;
 
 
@@ -19,7 +19,7 @@ import ru.yandex.practicum.filmorate.storage.impl.RatingDbStorage;
 public class RatingDbTest {
 
     private final RatingDbStorage ratingDbStorage;
-    private Mpa testRating;
+    private Rating testRating;
 
     @Test
     void getRatingById() {
@@ -37,7 +37,7 @@ public class RatingDbTest {
 
     @Test
     void updateRating() {
-        Mpa updateRating = new Mpa(1, "X");
+        Rating updateRating = new Rating(1, "X");
         ratingDbStorage.update(updateRating);
         testRating = ratingDbStorage.get(1);
         Assertions.assertThat(testRating).hasFieldOrPropertyWithValue("id", 1);

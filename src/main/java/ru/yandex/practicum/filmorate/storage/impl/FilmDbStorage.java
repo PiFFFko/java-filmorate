@@ -10,7 +10,6 @@ import ru.yandex.practicum.filmorate.exception.EntityNotExistException;
 import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.model.Rating;
 import ru.yandex.practicum.filmorate.storage.DirectorStorage;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
@@ -18,13 +17,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
-import java.util.Collection;
-import java.util.List;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
+
+
 
 @Primary
 @Component
@@ -62,8 +58,7 @@ public class FilmDbStorage implements FilmStorage {
     private static final String DELETE_FILM_DIRECTORS = "delete from film_director where film_id = ?";
     private static final String GET_FILM_GENRES = "select * from genres inner join film_category on " +
             "genres.genre_id = film_category.genre_id  where film_id = ?";
-    private final JdbcTemplate jdbcTemplate;
-private RatingDbStorage ratingDbStorage;
+  private RatingDbStorage ratingDbStorage;
     private static final String GET_FILM_DIRECTORS = "select * from DIRECTORS inner join FILM_DIRECTOR FD on " +
             "DIRECTORS.ID = FD.DIRECTOR_ID where film_id = ?";
     private static final String GET_DIRECTORS_FILMS_SORT_BY_YEAR = "select * from films f " +
@@ -98,25 +93,7 @@ private RatingDbStorage ratingDbStorage;
         throw new EntityNotExistException(String.format(FILM_NOT_EXIST_MESSAGE, id));
     }
 
-    private Film makeFilmFromComplexTable(ResultSet rs) throws SQLException {
-        LocalDate releaseDate = LocalDate.parse(rs.getString("release_date"), DATE_FORMATTER);
-        Film film = new Film(
-                rs.getInt("film_id"),
-                rs.getString("name"),
-                rs.getString("description"),
-                releaseDate,
-                rs.getInt("duration")
-        );
-        film.setMpa(new Rating(
-                rs.getInt("rating_id"),
-                rs.getString("rating_name")
-        ));
-        film.setGenres(getGenresForFilm(film.getId()));
-        film.setDirectors(getDirectorsForFilm(film.getId()));
-        return film;
-    }
-
-    private List<Genre> getGenresForFilm(Integer filmId) {
+      private List<Genre> getGenresForFilm(Integer filmId) {
         return jdbcTemplate.query(GET_FILM_GENRES, (rs, rowNum) -> makeGenre(rs), filmId);
     }
 
@@ -148,7 +125,7 @@ private RatingDbStorage ratingDbStorage;
             statement.setInt(5, film.getMpa().getId());
             return statement;
         }, keyHolder);
-        film.setId(keyHolder.getKey().intValue());
+        film.setId(Objects.requireNonNull(keyHolder.getKey()).intValue());
 
         for (Genre genre : film.getGenres()) {
             jdbcTemplate.update(INSERT_FILM_GENRES, film.getId(), genre.getId());
@@ -234,8 +211,26 @@ private RatingDbStorage ratingDbStorage;
                 .rate(resultSet.getInt("RATE"))
                 .mpa(ratingDbStorage.get(resultSet.getInt("RATING_ID")))
                 .genres(getFilmGenresFromDB(resultSet.getInt("FILM_ID")))
+                .directors(getFilmDirectorsFromDB(resultSet.getInt("film_id")))
                 .build();
     }
+
+    private Set<Director> getFilmDirectorsFromDB(int filmid) {
+        String sqlQuery = "SELECT d.id, d.name " +
+                "FROM FILM_DIRECTOR AS fd " +
+                "JOIN DIRECTORS AS d on fd.director_id = d.id " +
+                "WHERE fd.film_id = ? " +
+                "GROUP BY d.id";
+        return new HashSet<>(jdbcTemplate.query(sqlQuery, this::mapRowToDirector, filmid));
+    }
+
+    private Director mapRowToDirector(ResultSet rs, int rowNum) throws SQLException {
+        return Director.builder()
+                .id(rs.getInt("id"))
+                .name(rs.getString("name"))
+                .build();
+    }
+
     @Override
     public Collection<Film> getPopularByGenre(int genreId, int count) {
         String sqlQuery = "select f.FILM_ID, f.FILM_NAME, f.DESCRIPTION, f.RELEASE_DATE, f.DURATION, f.RATE, f.RATING_ID " +
@@ -280,13 +275,8 @@ private RatingDbStorage ratingDbStorage;
     }
 
 
-
-
-
-
     @Override
     public Collection<Film> getDirectorsFilms(Integer directorId, String sortBy) {
-        Director director = directorStorage.get(directorId);
         String query;
 
         if (sortBy.equals("year")) {
@@ -295,6 +285,6 @@ private RatingDbStorage ratingDbStorage;
             query = GET_DIRECTORS_FILMS_SORT_BY_LIKES;
         }
 
-        return jdbcTemplate.query(query, (rs, rowNum) -> makeFilmFromComplexTable(rs), directorId);
+        return jdbcTemplate.query(query, this::makeFilmFromComplexTable, directorId);
     }
 }

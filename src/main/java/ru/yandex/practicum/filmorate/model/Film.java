@@ -4,36 +4,31 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import ru.yandex.practicum.filmorate.constraint.ReleaseDate;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDate;
-
 import java.util.Set;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeSet;
 
 @Data
 @Builder
 @AllArgsConstructor
-
 public class Film {
-    private Integer id;
-    @NotBlank
+    private int id;
+    @NotNull
     private String name;
-    @Size(max = 200)
+    @NotNull
     private String description;
-    @ReleaseDate
+    @NotNull
     private LocalDate releaseDate;
-    @Positive
-    private long duration;
+    @PositiveOrZero
+    private int duration;
+    private Integer rate;
     private Rating mpa;
     private Set<Genre> genres;
-    private Integer rate;
+    private Set<Director> directors;
     @JsonIgnore
     private Set<Integer> likesFromUsers;
-    private Set<Director> directors;
 
     public Integer getPopularity() {
         return likesFromUsers.size();
