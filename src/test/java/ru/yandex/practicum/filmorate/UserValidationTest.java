@@ -5,6 +5,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.ConstraintViolation;
@@ -14,8 +18,12 @@ import javax.validation.ValidatorFactory;
 import java.time.LocalDate;
 import java.util.Set;
 
-
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 public class UserValidationTest {
+    @Autowired
+    private TestRestTemplate restTemplate;
+
     private static final String CORRECT_MAIL = "mail@mail.ru";
     private static final String CORRECT_LOGIN = "login";
     User user;
@@ -66,11 +74,12 @@ public class UserValidationTest {
 
     @Test
     public void dateInTheFutureShouldFailValidation() {
-        user.setEmail(CORRECT_MAIL);
-        user.setLogin(CORRECT_LOGIN);
         user.setBirthday(LocalDate.now().plusDays(1));
-        Set<ConstraintViolation<User>> violations = validator.validate(user);
-        Assertions.assertFalse(violations.isEmpty());
+
+        ResponseEntity<User> response = restTemplate.postForEntity("/users", user, User.class);
+
+        assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+
     }
 
     @Test
