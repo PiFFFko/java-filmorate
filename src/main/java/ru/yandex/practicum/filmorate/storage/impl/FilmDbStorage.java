@@ -218,8 +218,8 @@ public class FilmDbStorage implements FilmStorage {
                 .directors(getFilmDirectorsFromDB(resultSet.getInt("film_id")))
                 .build();
     }
-
-    private Set<Director> getFilmDirectorsFromDB(int filmid) {
+    @Override
+    public Set<Director> getFilmDirectorsFromDB(int filmid) {
         String sqlQuery = "SELECT d.id, d.name " +
                 "FROM FILM_DIRECTOR AS fd " +
                 "JOIN DIRECTORS AS d on fd.director_id = d.id " +
@@ -227,8 +227,8 @@ public class FilmDbStorage implements FilmStorage {
                 "GROUP BY d.id";
         return new HashSet<>(jdbcTemplate.query(sqlQuery, this::mapRowToDirector, filmid));
     }
-
-    private Director mapRowToDirector(ResultSet rs, int rowNum) throws SQLException {
+    @Override
+    public Director mapRowToDirector(ResultSet rs, int rowNum) throws SQLException {
         return Director.builder()
                 .id(rs.getInt("id"))
                 .name(rs.getString("name"))
