@@ -2,12 +2,17 @@ package ru.yandex.practicum.filmorate.storage.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.EntityNotExistException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -89,6 +94,36 @@ public class InMemoryFilmStorage implements FilmStorage {
                 .sorted(Comparator.comparing(Film::getPopularity).reversed())
                 .limit(count)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Genre mapRowToGenre(ResultSet resultSet, int rowNum) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public Set<Genre> getFilmGenresFromDB(int filmId) {
+        return null;
+    }
+
+    @Override
+    public Film makeFilmFromComplexTable(ResultSet resultSet, int rowNum) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public Collection<Film> getPopularByGenre(int genreId, int count) {
+        return null;
+    }
+
+    @Override
+    public Collection<Film> getPopularByYear(int year, int count) {
+        return null;
+    }
+
+    @Override
+    public Collection<Film> getPopularByGenreAndYear(int genreId, int year, int count) {
+        return null;
     }
 
     @Override

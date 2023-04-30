@@ -1,45 +1,39 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.AccessLevel;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import ru.yandex.practicum.filmorate.constraint.ReleaseDate;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
+
+import java.util.Set;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.TreeSet;
 
 @Data
-@NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public class Film {
-    Integer id;
-    @NotBlank
-    String name;
-    @Size(max = 200)
-    String description;
-    @ReleaseDate
-    LocalDate releaseDate;
-    @Positive
-    long duration;
-    Rating mpa;
-    List<Genre> genres = new ArrayList<>();
-    Set<Integer> likesFromUsers = new TreeSet<>();
-    List<Director> directors = new ArrayList<>();
+@Builder
+@AllArgsConstructor
 
-    public Film(Integer id, String name, String description, LocalDate releaseDate, long duration) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.releaseDate = releaseDate;
-        this.duration = duration;
-    }
+public class Film {
+    private Integer id;
+    @NotBlank
+    private String name;
+    @Size(max = 200)
+    private String description;
+    @ReleaseDate
+    private LocalDate releaseDate;
+    @Positive
+    private long duration;
+    private Rating mpa;
+    private Set<Genre> genres;
+    private Integer rate;
+    @JsonIgnore
+    private Set<Integer> likesFromUsers;
+    private Set<Director> directors;
 
     public Integer getPopularity() {
         return likesFromUsers.size();

@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.model.Rating;
+import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.service.RatingService;
 import ru.yandex.practicum.filmorate.storage.RatingStorage;
 
@@ -14,22 +14,22 @@ public class RatingServiceImpl implements RatingService {
     private final RatingStorage ratingStorage;
 
     @Override
-    public Rating get(Integer id) {
+    public Mpa get(Integer id) {
         return ratingStorage.get(id);
     }
 
     @Override
-    public Rating create(Rating rating) {
+    public Mpa create(Mpa rating) {
         return ratingStorage.add(rating);
     }
 
     @Override
-    public Rating update(Rating rating) {
+    public Mpa update(Mpa rating) {
         return ratingStorage.update(rating);
     }
 
     @Override
-    public Collection<Rating> getAll() {
+    public Collection<Mpa> getAll() {
         return ratingStorage.getAll();
     }
 }
