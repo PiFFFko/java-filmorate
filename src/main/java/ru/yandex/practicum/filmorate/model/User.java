@@ -14,7 +14,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 public class User {
-    private long id;
+    private int id;
     @NotNull
     @Email
     private String email;
@@ -24,5 +24,9 @@ public class User {
     @NotNull
     private LocalDate birthday;
     @JsonIgnore
-    private final Set<Long> friends = new HashSet<>();
+    private final Set<Integer> friends = new HashSet<>();
+
+
+    public void setFriends(Set<Integer> friends) {
+    }
 }
