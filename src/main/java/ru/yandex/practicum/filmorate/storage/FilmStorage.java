@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.storage;
 
-import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 
@@ -17,10 +16,6 @@ public interface FilmStorage extends BaseStorage<Film> {
     Set<Genre> getFilmGenresFromDB(int filmId);
 
     Film makeFilmFromComplexTable(ResultSet resultSet, int rowNum) throws SQLException;
-
-    Set<Director> getFilmDirectorsFromDB(int filmid);
-
-    Director mapRowToDirector(ResultSet rs, int rowNum) throws SQLException;
 
     Collection<Film> getPopularByGenre(int genreId, int count);
 
