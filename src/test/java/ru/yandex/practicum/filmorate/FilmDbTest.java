@@ -13,6 +13,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Rating;
 import ru.yandex.practicum.filmorate.storage.impl.FilmDbStorage;
 
+import javax.validation.Validator;
 import java.time.LocalDate;
 import java.time.Month;
 
@@ -24,10 +25,14 @@ public class FilmDbTest {
 
     private final FilmDbStorage filmDbStorage;
     private Film testFilm;
+    private Validator validator;
+    private static Film film;
+    private static Rating rating;
 
     @BeforeEach
     void addFilm() {
-        testFilm = new Film();
+        film = new Film(0, "name", "description",
+                LocalDate.of(1895, 12, 28), 10, 0, rating, null, null, null);
         testFilm.setName("Die Hard");
         testFilm.setReleaseDate(LocalDate.of(1988, Month.JULY, 12));
         testFilm.setMpa(new Rating(4, "R"));
@@ -51,7 +56,8 @@ public class FilmDbTest {
 
     @Test
     void updateFilm() {
-        Film updateFilm = new Film();
+        Film updateFilm =  film = new Film(0, "name", "description",
+                LocalDate.of(1895, 12, 28), 10, 0, rating, null, null, null);
         updateFilm.setId(1);
         updateFilm.setName("Terminator 2 Judgement Day");
         updateFilm.setReleaseDate(LocalDate.of(1999, Month.JULY, 1));
