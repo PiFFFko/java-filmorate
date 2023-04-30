@@ -19,6 +19,7 @@ public class FilmValidationTest {
     private Validator validator;
     private static Film film;
     private static Rating rating;
+
     @BeforeEach
     void setUp() {
         try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
