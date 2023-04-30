@@ -11,6 +11,5 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(of = "id")
 public class Genre {
     private int id;
-    @EqualsAndHashCode.Exclude
     private String name;
 }

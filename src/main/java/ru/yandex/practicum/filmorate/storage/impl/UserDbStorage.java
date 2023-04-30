@@ -13,7 +13,6 @@ import ru.yandex.practicum.filmorate.storage.UserStorage;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.List;
@@ -52,17 +51,17 @@ public class UserDbStorage implements UserStorage {
         if (user == null) {
             throw new EntityNotExistException(String.format("Пользователя с id %s не существует", id));
         }
-        return jdbcTemplate.query(GET_FRIENDS_QUERY, (rs, rowNum) -> makeUser(rs), id);
+        return jdbcTemplate.query(GET_FRIENDS_QUERY, this::makeUser, id);
     }
 
     @Override
     public Collection<User> getCommonFriends(Integer id, Integer otherId) {
-        return jdbcTemplate.query(GET_COMMON_FRIENDS, (rs, rowNum) -> makeUser(rs), id, otherId);
+        return jdbcTemplate.query(GET_COMMON_FRIENDS, this::makeUser, id, otherId);
     }
 
     @Override
     public User get(Integer id) {
-        List<User> users = jdbcTemplate.query(GET_USER_QUERY, (rs, rowNum) -> makeUser(rs), id);
+        List<User> users = jdbcTemplate.query(GET_USER_QUERY, this::makeUser, id);
         if (!users.isEmpty()) {
             return users.stream().findFirst().get();
         }
@@ -113,17 +112,17 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public Collection<User> getAll() {
-        return jdbcTemplate.query(GET_ALL_USERS_QUERY, (rs, rowNum) -> makeUser(rs));
+        return jdbcTemplate.query(GET_ALL_USERS_QUERY, this::makeUser);
     }
 
-    private User makeUser(ResultSet rs) throws SQLException {
-        LocalDate birthday = LocalDate.parse(rs.getString("birthday"), DATE_FORMATTER);
-        return new User(
-                rs.getInt("user_id"),
-                rs.getString("email"),
-                rs.getString("login"),
-                rs.getString("name"),
-                birthday);
+    private User makeUser(ResultSet resultSet, int rowNum) throws SQLException {
+        return User.builder()
+                .id(resultSet.getInt("USER_ID"))
+                .email(resultSet.getString("EMAIL"))
+                .login(resultSet.getString("LOGIN"))
+                .name(resultSet.getString("USER_NAME"))
+                .birthday(resultSet.getDate("BIRTHDAY").toLocalDate())
+                .build();
     }
 
 }
