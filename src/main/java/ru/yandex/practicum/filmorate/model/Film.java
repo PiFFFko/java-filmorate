@@ -10,7 +10,10 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 @Data
 @NoArgsConstructor
@@ -28,6 +31,7 @@ public class Film {
     Rating mpa;
     List<Genre> genres = new ArrayList<>();
     Set<Integer> likesFromUsers = new TreeSet<>();
+    List<Director> directors = new ArrayList<>();
 
     public Film(Integer id, String name, String description, LocalDate releaseDate, long duration) {
         this.id = id;

@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.storage.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -18,17 +18,17 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.List;
 
+@Primary
 @Component
 @RequiredArgsConstructor
-@Qualifier(value = "userDbStorage")
 public class UserDbStorage implements UserStorage {
-
+    private final JdbcTemplate jdbcTemplate;
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
     private static final String GET_FRIENDS_QUERY = "select user_id, email, name, login, birthday " +
             "from users u " +
             "inner join friend_requests fr on u.user_id = fr.user_id_to " +
             "where fr.user_id_from = ?";
-
     private static final String GET_COMMON_FRIENDS = "select u.user_id, email, name, login, birthday " +
             "from users u " +
             "inner join friend_requests fr on u.user_id = fr.user_id_to " +
@@ -45,10 +45,13 @@ public class UserDbStorage implements UserStorage {
     private static final String UPDATE_USER_QUERY = "update users set email = ?, login = ?, name = ?, birthday = ? " +
             "where user_id = ?;";
     private static final String GET_ALL_USERS_QUERY = "select * from users";
-    private final JdbcTemplate jdbcTemplate;
 
     @Override
     public Collection<User> getFriends(Integer id) {
+        User user = get(id);
+        if (user == null) {
+            throw new EntityNotExistException(String.format("Пользователя с id %s не существует", id));
+        }
         return jdbcTemplate.query(GET_FRIENDS_QUERY, (rs, rowNum) -> makeUser(rs), id);
     }
 
@@ -60,8 +63,9 @@ public class UserDbStorage implements UserStorage {
     @Override
     public User get(Integer id) {
         List<User> users = jdbcTemplate.query(GET_USER_QUERY, (rs, rowNum) -> makeUser(rs), id);
-        if (!users.isEmpty())
+        if (!users.isEmpty()) {
             return users.stream().findFirst().get();
+        }
         throw new EntityNotExistException(String.format("Пользователя с id %s не существует", id));
     }
 
@@ -81,11 +85,11 @@ public class UserDbStorage implements UserStorage {
         return user;
     }
 
-
     @Override
     public User remove(User user) {
-        if (jdbcTemplate.update(DELETE_USER_QUERY, user.getId()) > 0)
+        if (jdbcTemplate.update(DELETE_USER_QUERY, user.getId()) > 0) {
             return user;
+        }
         throw new EntityNotExistException(String.format("Пользователя с id %s не существует", user.getId()));
     }
 
@@ -96,8 +100,9 @@ public class UserDbStorage implements UserStorage {
                 user.getLogin(),
                 user.getName(),
                 user.getBirthday().format(DATE_FORMATTER),
-                user.getId()) > 0)
+                user.getId()) > 0) {
             return user;
+        }
         throw new EntityNotExistException(String.format("Пользователя с id %s не существует", user.getId()));
     }
 
@@ -113,7 +118,8 @@ public class UserDbStorage implements UserStorage {
 
     private User makeUser(ResultSet rs) throws SQLException {
         LocalDate birthday = LocalDate.parse(rs.getString("birthday"), DATE_FORMATTER);
-        return new User(rs.getInt("user_id"),
+        return new User(
+                rs.getInt("user_id"),
                 rs.getString("email"),
                 rs.getString("login"),
                 rs.getString("name"),

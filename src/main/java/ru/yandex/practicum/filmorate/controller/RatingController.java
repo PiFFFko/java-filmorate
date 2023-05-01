@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.controller;
 
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Rating;
@@ -12,7 +11,6 @@ import java.util.Collection;
 @RequiredArgsConstructor
 @RequestMapping(value = "/mpa")
 public class RatingController {
-
     private final RatingService ratingService;
 
     @GetMapping
@@ -34,5 +32,4 @@ public class RatingController {
     public Rating getRating(@PathVariable Integer id) {
         return ratingService.get(id);
     }
-
 }
