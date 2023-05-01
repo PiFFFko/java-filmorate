@@ -8,13 +8,16 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class InMemoryFilmStorage implements FilmStorage {
+
     private final UserStorage userStorage;
     private final Map<Integer, Film> films = new HashMap<>();
     private Integer idGenerator = 1;
@@ -84,20 +87,22 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Collection<Film> getPopular(Integer count) {
-        return films.values().stream()
-                .sorted(Comparator.comparing(Film::getPopularity).reversed())
-                .limit(count)
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public Collection<Film> getDirectorsFilms(Integer directorId, String sortBy) {
         return null;
     }
 
     @Override
+    public Collection<Film> getPopularByGenreAndYear(int count, int genreId, int year) {
+        return null;
+    }
+
+    @Override
     public Collection<Film> getCommonFilms(Integer userId, Integer friendId) {
+        return null;
+    }
+
+    @Override
+    public Collection<Film> get() {
         return null;
     }
 }
