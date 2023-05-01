@@ -33,6 +33,7 @@ public class Film {
     private Set<Director> directors;
     @JsonIgnore
     private Set<Integer> likesFromUsers;
+
     public Film(Integer id, String name, String description, LocalDate releaseDate, long duration) {
         this.id = id;
         this.name = name;
