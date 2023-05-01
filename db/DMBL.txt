@@ -11,6 +11,7 @@ Table films{
 }
 
 Table likes{
+ like_id integer [primary key]
   film_id integer [primary key]
   user_id integer [primary key]
 }
@@ -42,6 +43,12 @@ Table friends{
 user_id_from integer [primary key]
 user_id_to integer [primary key]
 friend_status boolean
+}
+
+Table films_genres {
+films_genre_id integer [primary key]
+film_id integer [primary key]
+genre_id integer [primary key]
 }
 
 

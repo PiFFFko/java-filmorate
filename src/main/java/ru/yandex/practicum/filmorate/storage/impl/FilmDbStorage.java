@@ -302,6 +302,6 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Collection<Film> getCommonFilms(Integer userId, Integer friendId) {
-        return jdbcTemplate.query(GET_COMMON_FILMS, (rs, rowNum) -> makeFilmFromComplexTable(rs), userId, friendId);
+        return jdbcTemplate.query(GET_COMMON_FILMS, this::makeFilmFromComplexTable, userId, friendId);
     }
 }
