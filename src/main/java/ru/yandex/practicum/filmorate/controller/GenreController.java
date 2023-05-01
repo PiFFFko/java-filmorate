@@ -11,6 +11,7 @@ import java.util.Collection;
 @AllArgsConstructor
 @RequestMapping(value = "/genres")
 public class GenreController {
+
     private final GenreService genreService;
 
     @GetMapping
