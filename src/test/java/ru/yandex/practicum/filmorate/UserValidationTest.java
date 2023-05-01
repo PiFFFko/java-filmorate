@@ -48,7 +48,7 @@ public class UserValidationTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"", "lo gin"})
+    @ValueSource(strings = {"", "l ogin"})
     public void incorrectLoginShouldFailValidation(String login) {
         user.setEmail(CORRECT_MAIL);
         user.setLogin(login);
