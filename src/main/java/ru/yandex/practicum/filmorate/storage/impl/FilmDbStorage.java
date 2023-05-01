@@ -83,8 +83,6 @@ public class FilmDbStorage implements FilmStorage {
             "group by f.film_id " +
             "order by count(l.user_id)";
 
-    private static final String FILM_NOT_EXIST_MESSAGE = "Фильма с id %s не существует";
-
     private static final String GET_COMMON_FILMS = "select f.film_id, description, name, release_date, duration, f.rating_id, rating_name " +
             "from films f " +
             "inner join ratings r on r.rating_id = f.rating_id " +
@@ -96,7 +94,6 @@ public class FilmDbStorage implements FilmStorage {
             "inner join ratings r on r.rating_id = f.rating_id " +
             "inner join likes l on l.film_id = f.film_id " +
             "where l.user_id = ?";
-    private final JdbcTemplate jdbcTemplate;
 
     @Override
     public Film get(Integer id) {
