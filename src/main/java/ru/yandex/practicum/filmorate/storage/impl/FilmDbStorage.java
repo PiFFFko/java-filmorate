@@ -111,6 +111,7 @@ public class FilmDbStorage implements FilmStorage {
 
         return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> makeFilmFromComplexTable(rs));
     }
+
     private Film makeFilmFromComplexTable(ResultSet rs) throws SQLException {
         LocalDate releaseDate = LocalDate.parse(rs.getString("release_date"), DATE_FORMATTER);
         Film film = new Film(
@@ -214,6 +215,7 @@ public class FilmDbStorage implements FilmStorage {
     public Collection<Film> getAll() {
         return jdbcTemplate.query(GET_ALL_FILMS_QUERY, (rs, rowNum) -> makeFilmFromComplexTable(rs));
     }
+
     @Override
     public Collection<Film> getDirectorsFilms(Integer directorId, String sortBy) {
         Director director = directorStorage.get(directorId);
@@ -232,32 +234,33 @@ public class FilmDbStorage implements FilmStorage {
     public Collection<Film> getCommonFilms(Integer userId, Integer friendId) {
         return jdbcTemplate.query(GET_COMMON_FILMS, (rs, rowNum) -> makeFilmFromComplexTable(rs), userId, friendId);
     }
+
     public Collection<Film> getPopularByGenreAndYear(int count, int genreId, int year) {
         List<Film> films;
         String sqlQuery;
 
-        String sqlSelect = "SELECT f.film_id, f.name, f.description, f.release_dt, f.duration, f.rating_id, " +
+        String sqlSelect = "SELECT f.film_id, f.name, f.description, f.release_date, f.duration, f.rating_id, " +
                 "COUNT(fl.user_id) as likes " +
                 "FROM film f ";
-        String sqlJoin = "LEFT JOIN film_like fl ON f.film_id=fl.film_id ";
+        String sqlJoin = "LEFT JOIN likes fl ON f.film_id=fl.film_id ";
         String sqlWhere = "WHERE fg.genre_id = ? ";
-        String sqlGroup = "GROUP BY f.film_id, f.name, f.description, f.release_dt, f.duration, f.rating_id " +
+        String sqlGroup = "GROUP BY f.film_id, f.name, f.description, f.release_date, f.duration, f.rating_id " +
                 "ORDER BY likes DESC, film_id " +
                 "LIMIT ?";
 
         if (genreId == 0) {
-            sqlWhere = "WHERE EXTRACT (year FROM f.release_dt) = ? ";
+            sqlWhere = "WHERE EXTRACT (year FROM f.release_date) = ? ";
             sqlQuery = sqlSelect + sqlJoin + sqlWhere + sqlGroup;
             films = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> makeFilmFromComplexTable(rs), year, count);
 
         } else if (year == 0) {
-            sqlJoin += "JOIN film_x_genre fg ON f.film_id=fg.film_id ";
+            sqlJoin += "JOIN films_genres fg ON f.film_id=fg.film_id ";
             sqlQuery = sqlSelect + sqlJoin + sqlWhere + sqlGroup;
             films = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> makeFilmFromComplexTable(rs), genreId, count);
 
         } else {
-            sqlJoin += "JOIN film_x_genre fg ON f.film_id=fg.film_id ";
-            sqlWhere += "AND EXTRACT (year FROM f.release_dt) = ? ";
+            sqlJoin += "JOIN films_genres fg ON f.film_id=fg.film_id ";
+            sqlWhere += "AND EXTRACT (year FROM f.release_date) = ? ";
             sqlQuery = sqlSelect + sqlJoin + sqlWhere + sqlGroup;
             films = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> makeFilmFromComplexTable(rs), genreId, year, count);
         }
