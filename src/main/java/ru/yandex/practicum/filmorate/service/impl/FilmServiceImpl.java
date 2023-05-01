@@ -21,6 +21,7 @@ public class FilmServiceImpl implements FilmService {
     @Qualifier("filmDbStorage")
     @NonNull
     private final FilmStorage filmStorage;
+
     @Override
     public Film get(Integer id) {
         return filmStorage.get(id);
@@ -67,6 +68,7 @@ public class FilmServiceImpl implements FilmService {
         }
         return filmStorage.getPopularByGenreAndYear(count, genreId, year);
     }
+
     private int compare(Film f0, Film f1) {
         return -1 * (f0.getLikesFromUsers().size() - f1.getLikesFromUsers().size()); //обратный порядок
     }
