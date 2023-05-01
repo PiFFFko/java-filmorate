@@ -58,13 +58,20 @@ public class FilmController {
     }
 
     @GetMapping("/common")
-    public Collection<Film> getCommonFilms(@RequestParam Integer userId, @RequestParam Integer friendId) {
+    public Collection<Film> getCommonFilms(@RequestParam Integer userId,
+                                           @RequestParam Integer friendId) {
         return filmService.getCommonFilms(userId, friendId);
     }
 
-
     @GetMapping("/director/{directorId}")
-    public Collection<Film> getDirectorsFilms(@PathVariable Integer directorId, @RequestParam String sortBy) {
+    public Collection<Film> getDirectorsFilms(@PathVariable Integer directorId,
+                                              @RequestParam String sortBy) {
         return filmService.getDirectorsFilms(directorId, sortBy);
+    }
+
+    @GetMapping("/search")
+    public Collection<Film> searchFilms(@RequestParam String query,
+                                        @RequestParam String by) {
+        return filmService.searchFilms(query, by);
     }
 }

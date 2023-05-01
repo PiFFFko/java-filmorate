@@ -12,4 +12,6 @@ public interface FilmService extends BaseService<Film> {
     Collection<Film> getDirectorsFilms(Integer directorId, String sortBy);
 
     Film remove(Integer id);
+
+    Collection<Film> searchFilms(String query, String by);
 }

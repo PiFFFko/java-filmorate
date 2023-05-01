@@ -100,4 +100,9 @@ public class InMemoryFilmStorage implements FilmStorage {
     public Collection<Film> getCommonFilms(Integer userId, Integer friendId) {
         return null;
     }
+
+    @Override
+    public Collection<Film> searchFilms(String query, String by) {
+        return null;
+    }
 }
