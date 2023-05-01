@@ -21,7 +21,7 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
 
-    private int id;
+    private Integer id;
     @Email
     @NotBlank
     private String email;
