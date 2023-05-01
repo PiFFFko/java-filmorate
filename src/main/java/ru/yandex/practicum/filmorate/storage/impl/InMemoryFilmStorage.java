@@ -17,6 +17,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Slf4j
 public class InMemoryFilmStorage implements FilmStorage {
+
     private final UserStorage userStorage;
     private final Map<Integer, Film> films = new HashMap<>();
     private Integer idGenerator = 1;
