@@ -30,7 +30,7 @@ public class FilmDbTest {
         testFilm = new Film();
         testFilm.setName("Die Hard");
         testFilm.setReleaseDate(LocalDate.of(1988, Month.JULY, 12));
-        testFilm.setMpa(new Rating(4, "R"));
+        testFilm.setRating(new Rating(4, "R"));
         filmDbStorage.add(testFilm);
     }
 
@@ -55,7 +55,7 @@ public class FilmDbTest {
         updateFilm.setId(1);
         updateFilm.setName("Terminator 2 Judgement Day");
         updateFilm.setReleaseDate(LocalDate.of(1999, Month.JULY, 1));
-        updateFilm.setMpa(new Rating(4, "R"));
+        updateFilm.setRating(new Rating(4, "R"));
         filmDbStorage.update(updateFilm);
         testFilm = filmDbStorage.get(1);
         Assertions.assertThat(testFilm).hasFieldOrPropertyWithValue("id", 1);

@@ -28,7 +28,7 @@ public class Film {
     @Positive
     private long duration;
     private Integer rate;
-    private Rating mpa;
+    private Rating rating;
     private Set<Genre> genres;
     private Set<Director> directors;
     @JsonIgnore

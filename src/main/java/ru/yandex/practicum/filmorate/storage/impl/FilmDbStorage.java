@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.storage.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -13,6 +14,7 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.DirectorStorage;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,10 +22,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
 @Primary
 @Component
 @RequiredArgsConstructor
+@Qualifier("filmDBStorage")
 public class FilmDbStorage implements FilmStorage {
     private final DirectorStorage directorStorage;
     private final JdbcTemplate jdbcTemplate;
@@ -123,30 +125,65 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     @Override
+
     public Film add(Film film) {
-        String releaseDate = film.getReleaseDate().format(DATE_FORMATTER);
+        if (film.getRate() == null) {
+            film.setRate(0);
+        }
+
+        final String sqlQuery = "insert into FILMS (NAME, DESCRIPTION, RELEASE_DATE, DURATION, RATING_ID) " +
+                "values (?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
+
         jdbcTemplate.update(connection -> {
-            PreparedStatement statement = connection.prepareStatement(INSERT_FILM_QUERY, new String[]{"film_id"});
-            statement.setString(1, film.getName());
-            statement.setString(2, film.getDescription());
-            statement.setString(3, releaseDate);
-            statement.setLong(4, film.getDuration());
-            statement.setInt(5, film.getMpa().getId());
-            return statement;
+            PreparedStatement stmt = connection.prepareStatement(sqlQuery, new String[]{"FILM_ID"});
+            stmt.setString(1, film.getName());
+            stmt.setString(2, film.getDescription());
+            stmt.setDate(3, Date.valueOf(film.getReleaseDate()));
+            stmt.setLong(4, film.getDuration());
+            stmt.setLong(5, film.getRating().getId());
+            return stmt;
         }, keyHolder);
         film.setId(Objects.requireNonNull(keyHolder.getKey()).intValue());
-
-        for (Genre genre : film.getGenres()) {
-            jdbcTemplate.update(INSERT_FILM_GENRES, film.getId(), genre.getId());
+        if (film.getGenres() != null) {
+            addFilmGenres(film);
         }
-        for (Director director : film.getDirectors()) {
-            jdbcTemplate.update(INSERT_FILM_DIRECTORS, film.getId(), director.getId());
+        if (film.getDirectors() != null) {
+            addFilmDirectors(film);
         }
-
-        return film;
+       return film;
     }
 
+    private void addFilmDirectors(Film f) {
+        final String sqlQuery = "insert into FILMS_DIRECTORS (DIRECTOR_ID, FILM_ID) " +
+                "values (?, ?) ";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        Set<Director> directors = f.getDirectors();
+
+        for (Director d : directors) {
+            jdbcTemplate.update(connection -> {
+                PreparedStatement stmt = connection.prepareStatement(sqlQuery, new String[]{"ID"});
+                stmt.setLong(1, d.getId());
+                stmt.setLong(2, f.getId());
+                return stmt;
+            }, keyHolder);
+        }
+    }
+    private void addFilmGenres(Film film) {
+        final String sqlQuery = "insert into FILMS_GENRES (FILM_ID, GENRE_ID) " +
+                "values (?, ?) ";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        Set<Genre> genres = film.getGenres();
+
+        for (Genre genre : genres) {
+            jdbcTemplate.update(connection -> {
+                PreparedStatement stmt = connection.prepareStatement(sqlQuery, new String[]{"FILMS_GENRE_ID"});
+                stmt.setLong(1, film.getId());
+                stmt.setInt(2, genre.getId());
+                return stmt;
+            }, keyHolder);
+        }
+    }
     @Override
     public Film remove(Film film) {
         if (jdbcTemplate.update(DELETE_FILM_QUERY, film.getId()) > 0) {
@@ -162,7 +199,7 @@ public class FilmDbStorage implements FilmStorage {
                 film.getReleaseDate().format(DATE_FORMATTER),
                 film.getDescription(),
                 film.getDuration(),
-                film.getMpa().getId(),
+                film.getRating().getId(),
                 film.getId()) > 0) {
             jdbcTemplate.update(DELETE_FILM_GENRES, film.getId());
             jdbcTemplate.update(DELETE_FILM_DIRECTORS, film.getId());
@@ -217,12 +254,11 @@ public class FilmDbStorage implements FilmStorage {
     public Film makeFilmFromComplexTable(ResultSet resultSet, int rowNum) throws SQLException {
         return Film.builder()
                 .id(resultSet.getInt("FILM_ID"))
-                .name(resultSet.getString("FILM_NAME"))
+                .name(resultSet.getString("NAME"))
                 .description(resultSet.getString("DESCRIPTION"))
                 .releaseDate(resultSet.getDate("RELEASE_DATE").toLocalDate())
                 .duration(resultSet.getInt("DURATION"))
-                .rate(resultSet.getInt("RATE"))
-                .mpa(ratingDbStorage.get(resultSet.getInt("RATING_ID")))
+                .rating(ratingDbStorage.get(resultSet.getInt("RATING_ID")))
                 .genres(getFilmGenresFromDB(resultSet.getInt("FILM_ID")))
                 .directors(getFilmDirectorsFromDB(resultSet.getInt("FILM_ID")))
                 .build();
