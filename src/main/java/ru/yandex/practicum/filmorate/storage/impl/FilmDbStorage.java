@@ -43,6 +43,7 @@ public class FilmDbStorage implements FilmStorage {
             "duration = ?, rating_id = ? where film_id = ?";
     private static final String GET_ALL_FILMS_QUERY = "select * from films " +
             "inner join ratings r on r.rating_id = films.rating_id";
+    private static final String FILM_NOT_EXIST_MESSAGE = "Фильма с id %s не существует";
     private static final String GET_POPULAR_FILMS_QUERY = "select * " +
             "from films f " +
             "left join likes l ON l.film_id = f.film_id " +
@@ -81,7 +82,17 @@ public class FilmDbStorage implements FilmStorage {
             "group by f.film_id " +
             "order by count(l.user_id)";
 
-    private static final String FILM_NOT_EXIST_MESSAGE = "Фильма с id %s не существует";
+    private static final String GET_COMMON_FILMS = "select f.film_id, description, name, release_date, duration, f.rating_id, rating_name " +
+            "from films f " +
+            "inner join ratings r on r.rating_id = f.rating_id " +
+            "inner join likes l on l.film_id = f.film_id " +
+            "where l.user_id = ? " +
+            "intersect " +
+            "select f.film_id, description, name, release_date, duration, f.rating_id, rating_name " +
+            "from films f " +
+            "inner join ratings r on r.rating_id = f.rating_id " +
+            "inner join likes l on l.film_id = f.film_id " +
+            "where l.user_id = ?";
 
     @Override
     public Film get(Integer id) {
@@ -287,5 +298,10 @@ public class FilmDbStorage implements FilmStorage {
         }
 
         return jdbcTemplate.query(query, this::makeFilmFromComplexTable, directorId);
+    }
+
+    @Override
+    public Collection<Film> getCommonFilms(Integer userId, Integer friendId) {
+        return jdbcTemplate.query(GET_COMMON_FILMS, (rs, rowNum) -> makeFilmFromComplexTable(rs), userId, friendId);
     }
 }

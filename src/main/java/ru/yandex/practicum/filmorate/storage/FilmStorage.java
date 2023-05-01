@@ -13,6 +13,8 @@ public interface FilmStorage extends BaseStorage<Film> {
     Genre mapRowToGenre(ResultSet resultSet, int rowNum) throws SQLException;
     Set<Genre> getFilmGenresFromDB(int filmId);
 
+    Collection<Film> getCommonFilms(Integer userId, Integer friendId);
+
     Film makeFilmFromComplexTable(ResultSet resultSet, int rowNum) throws SQLException;
     Collection<Film> getPopularByGenre(int genreId, int count);
     Collection<Film> getPopularByYear(int year, int count);

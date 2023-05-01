@@ -10,6 +10,8 @@ public interface FilmService extends BaseService<Film> {
 
 
 
+    Collection<Film> getCommonFilms(Integer userId, Integer friendId);
+
     Collection<Film> getDirectorsFilms(Integer directorId, String sortBy);
 
     Film remove(Integer id);
