@@ -119,7 +119,7 @@ create TABLE IF NOT EXISTS REVIEWS_GRADES (
 
 -- PUBLIC.FILMS_GENRES  definition
 create TABLE IF NOT EXISTS FILMS_GENRES (
-  film_id integer REFERENCES film (film_id) ON delete CASCADE ON update CASCADE,
-  genre_id integer REFERENCES genre (genre_id),
+  film_id integer REFERENCES films (film_id) ON delete CASCADE ON update CASCADE,
+  genre_id integer REFERENCES genres (genre_id),
   PRIMARY KEY (film_id, genre_id)
 );

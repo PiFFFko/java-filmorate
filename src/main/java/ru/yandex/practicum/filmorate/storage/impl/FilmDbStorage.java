@@ -241,7 +241,7 @@ public class FilmDbStorage implements FilmStorage {
 
         String sqlSelect = "SELECT f.film_id, f.name, f.description, f.release_date, f.duration, f.rating_id, " +
                 "COUNT(fl.user_id) as likes " +
-                "FROM film f ";
+                "FROM FILMS f ";
         String sqlJoin = "LEFT JOIN likes fl ON f.film_id=fl.film_id ";
         String sqlWhere = "WHERE fg.genre_id = ? ";
         String sqlGroup = "GROUP BY f.film_id, f.name, f.description, f.release_date, f.duration, f.rating_id " +
