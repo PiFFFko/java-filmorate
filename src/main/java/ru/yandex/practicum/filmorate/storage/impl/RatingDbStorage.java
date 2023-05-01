@@ -36,9 +36,8 @@ public class RatingDbStorage implements RatingStorage {
     @Override
     public Rating get(Integer id) {
         List<Rating> ratings = jdbcTemplate.query(GET_RATING_QUERY, (rs, rowNum) -> makeRating(rs), id);
-        if (!ratings.isEmpty()){
+        if (!ratings.isEmpty())
             return ratings.stream().findFirst().get();
-        }
         throw new EntityNotExistException(String.format(RATING_NOT_EXIST_MESSAGE, id));
     }
 
@@ -63,9 +62,7 @@ public class RatingDbStorage implements RatingStorage {
 
     @Override
     public Rating update(Rating rating) {
-        if (jdbcTemplate.update(UPDATE_RATING_QUERY,
-                rating.getName(),
-                rating.getId()) > 0){
+        if (jdbcTemplate.update(UPDATE_RATING_QUERY, rating.getName(), rating.getId()) > 0) {
             return rating;
         }
         throw new EntityNotExistException(String.format(RATING_NOT_EXIST_MESSAGE, rating.getId()));
