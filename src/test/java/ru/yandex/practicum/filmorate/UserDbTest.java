@@ -29,6 +29,8 @@ class UserDbTest {
     private final UserDbStorage userDbStorage;
     private User testUser;
 
+    private User user;
+
     @BeforeEach
     void addUser() {
         testUser = new User(0, "mail@ya.ru", "login", "name", LocalDate.of(2000, 1, 1));
@@ -37,7 +39,7 @@ class UserDbTest {
 
     @Test
     void getUserById() {
-        testUser = userDbStorage.get(1);
+        user = userDbStorage.get(1);
         Assertions.assertThat(testUser).hasFieldOrPropertyWithValue("id", 1);
         Assertions.assertThat(testUser).hasFieldOrPropertyWithValue("email", "test@test.ru");
         Assertions.assertThat(testUser).hasFieldOrPropertyWithValue("login", "test");

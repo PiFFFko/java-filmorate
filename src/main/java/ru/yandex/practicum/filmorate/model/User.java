@@ -1,12 +1,16 @@
 package ru.yandex.practicum.filmorate.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
+import ru.yandex.practicum.filmorate.constraint.WithoutSpaces;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Past;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -14,16 +18,18 @@ import java.util.Set;
 @Data
 @Builder
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
 
     private int id;
-    @NotNull
     @Email
+    @NotBlank
     private String email;
-    @NotNull
+    @NotBlank
+    @WithoutSpaces
     private String login;
     private String name;
-    @NotNull
+    @Past
     private LocalDate birthday;
     @JsonIgnore
     private final Set<Integer> friends = new HashSet<>();
