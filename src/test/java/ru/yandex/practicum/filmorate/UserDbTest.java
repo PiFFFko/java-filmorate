@@ -21,6 +21,7 @@ import java.time.LocalDate;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:schema.sql")
 @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:data.sql")
+
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -28,8 +29,6 @@ class UserDbTest {
 
     private final UserDbStorage userDbStorage;
     private User testUser;
-
-    private User user;
 
     @BeforeEach
     void addUser() {
@@ -39,7 +38,7 @@ class UserDbTest {
 
     @Test
     void getUserById() {
-        user = userDbStorage.get(1);
+        testUser = userDbStorage.get(1);
         Assertions.assertThat(testUser).hasFieldOrPropertyWithValue("id", 1);
         Assertions.assertThat(testUser).hasFieldOrPropertyWithValue("email", "test@test.ru");
         Assertions.assertThat(testUser).hasFieldOrPropertyWithValue("login", "test");
@@ -65,4 +64,5 @@ class UserDbTest {
         Assertions.assertThat(testUser).hasFieldOrPropertyWithValue("email", "update@update.ru");
         Assertions.assertThat(testUser).hasFieldOrPropertyWithValue("login", "updateUser");
     }
+
 }
