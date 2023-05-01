@@ -25,6 +25,7 @@ public class FilmDbTest {
     private final FilmDbStorage filmDbStorage;
     private Film testFilm;
     private static Rating rating;
+
     @BeforeEach
     void addFilm() {
         rating = new Rating(1, null);
