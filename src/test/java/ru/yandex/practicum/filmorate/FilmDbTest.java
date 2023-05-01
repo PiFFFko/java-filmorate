@@ -24,13 +24,13 @@ public class FilmDbTest {
 
     private final FilmDbStorage filmDbStorage;
     private Film testFilm;
-    private static Rating rating;
 
     @BeforeEach
     void addFilm() {
-        rating = new Rating(1, null);
-        testFilm = new Film(0, "name", "description",
-                LocalDate.of(1895, 12, 28), 10, 0, rating, null, null, null);
+        testFilm = new Film();
+        testFilm.setName("Die Hard");
+        testFilm.setReleaseDate(LocalDate.of(1988, Month.JULY, 12));
+        testFilm.setMpa(new Rating(4, "R"));
         filmDbStorage.add(testFilm);
     }
 
@@ -51,8 +51,7 @@ public class FilmDbTest {
 
     @Test
     void updateFilm() {
-
-        Film updateFilm = testFilm;
+        Film updateFilm = new Film();
         updateFilm.setId(1);
         updateFilm.setName("Terminator 2 Judgement Day");
         updateFilm.setReleaseDate(LocalDate.of(1999, Month.JULY, 1));
@@ -62,7 +61,5 @@ public class FilmDbTest {
         Assertions.assertThat(testFilm).hasFieldOrPropertyWithValue("id", 1);
         Assertions.assertThat(testFilm).hasFieldOrPropertyWithValue("name", "Terminator 2 Judgement Day");
         Assertions.assertThat(testFilm).hasFieldOrPropertyWithValue("releaseDate", LocalDate.of(1999, Month.JULY, 1));
-
     }
-
 }
