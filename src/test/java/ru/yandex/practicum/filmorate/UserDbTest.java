@@ -4,17 +4,24 @@ import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.yandex.practicum.filmorate.exception.EntityNotExistException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.impl.UserDbStorage;
 
 import java.time.LocalDate;
 
-@SpringBootTest
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:schema.sql")
+@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:data.sql")
+
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -25,10 +32,7 @@ class UserDbTest {
 
     @BeforeEach
     void addUser() {
-        testUser = new User();
-        testUser.setEmail("test@test.ru");
-        testUser.setLogin("test");
-        testUser.setBirthday(LocalDate.now());
+        testUser = new User(0, "mail@ya.ru", "login", "name", LocalDate.of(2000, 1, 1));
         userDbStorage.add(testUser);
     }
 
@@ -49,7 +53,7 @@ class UserDbTest {
 
     @Test
     void updateUser() {
-        User updateUser = new User();
+        User updateUser = new User(0, "maeil@ya.ru", "login", "name", LocalDate.of(2000, 1, 1));
         updateUser.setId(1);
         updateUser.setLogin("updateUser");
         updateUser.setEmail("update@update.ru");

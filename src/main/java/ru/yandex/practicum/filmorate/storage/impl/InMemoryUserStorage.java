@@ -1,6 +1,8 @@
 package ru.yandex.practicum.filmorate.storage.impl;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.EntityNotExistException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -9,9 +11,12 @@ import ru.yandex.practicum.filmorate.storage.UserStorage;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Component
 @Slf4j
+@Data
+@Component
+@Qualifier("inMemoryUserStorage")
 public class InMemoryUserStorage implements UserStorage {
+
     private final Map<Integer, User> users = new HashMap<>();
     private Integer idGenerator = 1;
 

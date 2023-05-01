@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Rating;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -16,14 +17,16 @@ import java.util.Set;
 public class FilmValidationTest {
     Film film;
     private Validator validator;
-
+    private static Rating rating;
     @BeforeEach
     void setUp() {
         try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
             factory.getConstraintValidatorFactory();
             validator = factory.getValidator();
         }
-        film = new Film();
+        rating = new Rating(1, null);
+        film = new Film(0, "name", "description",
+                LocalDate.of(1895, 12, 28), 10, 0, rating, null, null, null);
     }
 
     @Test

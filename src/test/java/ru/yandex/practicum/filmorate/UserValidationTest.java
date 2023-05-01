@@ -27,7 +27,7 @@ public class UserValidationTest {
             factory.getConstraintValidatorFactory();
             validator = factory.getValidator();
         }
-        user = new User();
+        user = new User(0, "mail@ya.ru", "login", "name", LocalDate.of(2000, 1, 1));
     }
 
     @ParameterizedTest

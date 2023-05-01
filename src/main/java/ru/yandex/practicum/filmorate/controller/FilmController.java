@@ -1,19 +1,23 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Like;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.service.LikeService;
-
 import javax.validation.Valid;
 import java.util.Collection;
 
+@Slf4j
+@AllArgsConstructor
 @RestController
-@RequiredArgsConstructor
 @RequestMapping(value = "/films")
 public class FilmController {
+
+    @Autowired
     private final FilmService filmService;
     private final LikeService likeService;
 
@@ -53,8 +57,11 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
-    public Collection<Film> getPopular(@RequestParam(defaultValue = "10") Integer count) {
-        return filmService.getPopular(count);
+    public Collection<Film> getPopular(@RequestParam(defaultValue = "10") int count,
+                                       @RequestParam(defaultValue = "0") int genreId,
+                                       @RequestParam(defaultValue = "0") int year) {
+
+        return filmService.getPopular(count, genreId, year);
     }
 
     @GetMapping("/director/{directorId}")

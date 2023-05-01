@@ -14,6 +14,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Slf4j
 public class UserServiceImpl implements UserService {
+
     private final UserStorage userStorage;
 
     @Override

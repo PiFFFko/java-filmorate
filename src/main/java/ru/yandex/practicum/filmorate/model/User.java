@@ -1,39 +1,38 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.AccessLevel;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import ru.yandex.practicum.filmorate.constraint.WithoutSpaces;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Past;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
 @Data
-@NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@Builder
+@AllArgsConstructor
 public class User {
-    Integer id;
-    @Email
-    @NotBlank
-    String email;
-    @NotBlank
-    @WithoutSpaces
-    String login;
-    String name;
-    @Past
-    LocalDate birthday;
-    Set<Integer> friends = new HashSet<>();
 
-    public User(Integer id, String email, String login, String name, LocalDate birthday) {
-        this.id = id;
-        this.email = email;
-        this.login = login;
-        this.name = name;
-        this.birthday = birthday;
+    private int id;
+    @NotNull
+    @Email
+    private String email;
+    @NotNull
+    private String login;
+    private String name;
+    @NotNull
+    private LocalDate birthday;
+    @JsonIgnore
+    private final Set<Integer> friends = new HashSet<>();
+
+    public void setFriends(Set<Integer> friends) {
+    }
+
+    public Set<Integer> getFriends() {
+        return friends;
     }
 }
+
