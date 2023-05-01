@@ -121,7 +121,7 @@ public class UserDbStorage implements UserStorage {
                 .id(resultSet.getInt("USER_ID"))
                 .email(resultSet.getString("EMAIL"))
                 .login(resultSet.getString("LOGIN"))
-                .name(resultSet.getString("USER_NAME"))
+                .name(resultSet.getString("NAME"))
                 .birthday(resultSet.getDate("BIRTHDAY").toLocalDate())
                 .build();
     }

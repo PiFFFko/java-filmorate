@@ -224,7 +224,7 @@ public class FilmDbStorage implements FilmStorage {
                 .rate(resultSet.getInt("RATE"))
                 .mpa(ratingDbStorage.get(resultSet.getInt("RATING_ID")))
                 .genres(getFilmGenresFromDB(resultSet.getInt("FILM_ID")))
-                .directors(getFilmDirectorsFromDB(resultSet.getInt("film_id")))
+                .directors(getFilmDirectorsFromDB(resultSet.getInt("FILM_ID")))
                 .build();
     }
 
