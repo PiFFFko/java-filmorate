@@ -89,8 +89,8 @@ public class FilmDbStorage implements FilmStorage {
             "left join FILM_DIRECTOR FD on FILMS.FILM_ID = FD.FILM_ID " +
             "left join DIRECTORS D on D.ID = FD.DIRECTOR_ID " +
             "left join likes l ON l.film_id = films.film_id " +
-            "where films.name like ?" +
-            "order by count(l.user_id)";
+            "where lower(films.name) like ?" +
+            "order by count(l.user_id) desc";
     private static final String SEARCH_FILM_BY_DIRECTOR = "select * from films " +
             "left join ratings r on r.rating_id = films.rating_id " +
             "left join film_category fc on fc.film_id = films.film_id " +
@@ -98,17 +98,18 @@ public class FilmDbStorage implements FilmStorage {
             "left join FILM_DIRECTOR FD on FILMS.FILM_ID = FD.FILM_ID " +
             "left join DIRECTORS D on D.ID = FD.DIRECTOR_ID " +
             "left join likes l ON l.film_id = films.film_id " +
-            "where d.NAME like ?" +
-            "order by count(l.user_id)";
-    private static final String SEARCH_FILM = "select * from films " +
+            "where lower(d.NAME) like ?" +
+            "order by count(l.user_id) desc";
+    private static final String SEARCH_FILM = "select distinct * from films " +
             "left join ratings r on r.rating_id = films.rating_id " +
             "left join film_category fc on fc.film_id = films.film_id " +
             "left join genres g on g.genre_id = fc.genre_id " +
             "left join FILM_DIRECTOR FD on FILMS.FILM_ID = FD.FILM_ID " +
             "left join DIRECTORS D on D.ID = FD.DIRECTOR_ID " +
             "left join likes l ON l.film_id = films.film_id " +
-            "where d.NAME like ? or films.NAME like ?" +
-            "order by count(l.user_id)";
+            "where lower(d.NAME) like ? or lower(films.NAME) like ?" +
+            "group by FILMS.FILM_ID " +
+            "order by count(l.user_id) desc";
     private static final String GET_COMMON_FILMS = "select f.film_id, description, name, release_date, duration, f.rating_id, rating_name " +
             "from films f " +
             "inner join ratings r on r.rating_id = f.rating_id " +
@@ -262,19 +263,25 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Collection<Film> searchFilms(String query, String by) {
+        List<String> searchBy = List.of(by.split(","));
+        query = query.toLowerCase();
         String sql;
 
-        if (by.equals("director")) {
-            sql = SEARCH_FILM_BY_DIRECTOR;
-        } else if (by.equals("title")) {
-            sql = SEARCH_FILM_BY_TITLE;
+        if (searchBy.size() == 1) {
+            if (by.equals("director")) {
+                sql = SEARCH_FILM_BY_DIRECTOR;
+            } else if (by.equals("title")) {
+                sql = SEARCH_FILM_BY_TITLE;
+            } else {
+                throw new EntityNotExistException("Можно искать только по режиссеру (director) или названию (title)");
+            }
+
+            return jdbcTemplate.query(sql, (rs, rowNum) -> makeFilmFromComplexTable(rs), "%" + query + "%");
         } else {
             sql = SEARCH_FILM;
             return jdbcTemplate.query(sql, (rs, rowNum) -> makeFilmFromComplexTable(rs),
                     "%" + query + "%",
                     "%" + query + "%");
         }
-
-        return jdbcTemplate.query(sql, (rs, rowNum) -> makeFilmFromComplexTable(rs), "%" + query + "%");
     }
 }
