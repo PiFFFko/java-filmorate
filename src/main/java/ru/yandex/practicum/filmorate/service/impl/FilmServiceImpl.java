@@ -55,4 +55,9 @@ public class FilmServiceImpl implements FilmService {
     public Film remove(Integer id) {
         return filmStorage.remove(get(id));
     }
+
+    @Override
+    public Collection<Film> searchFilms(String query, String by) {
+        return filmStorage.searchFilms(query, by);
+    }
 }
