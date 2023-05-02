@@ -9,7 +9,11 @@ public interface LikeStorage {
 
     Like removeLike(Like like);
 
+    Collection<Like> getAllLikes();
+
     Collection<Like> getAllLikesForFilm(Integer filmId);
+
+    Collection<Like> getAllLikesByUser(Integer userId);
 
     Like likeFilm(Integer filmId, Integer userId);
 
