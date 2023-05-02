@@ -86,6 +86,7 @@ public class RecommendationServiceImpl implements RecommendationService {
                     uPred.put(k, uPred.get(k) + finalValue);
                     uFreq.put(k, uFreq.get(k) + freq.get(k).get(j));
                 } catch (NullPointerException e1) {
+                    // This is expected
                 }
             }
         }
