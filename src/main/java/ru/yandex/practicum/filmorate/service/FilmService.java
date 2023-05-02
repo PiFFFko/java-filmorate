@@ -12,6 +12,6 @@ public interface FilmService extends BaseService<Film> {
 
     Film remove(Integer id);
 
-    Collection<Film> getTop(int count, int i, int i1);
+    Collection<Film> getTop(int count, int genreId, int year);
 
 }

@@ -60,17 +60,6 @@ public class FilmServiceImpl implements FilmService {
     }
 
     public Collection<Film> getTop(int count, int genreId, int year) {
-        if (genreId == 0 && year == 0) {
-            return filmStorage.get().stream()
-                    .sorted(this::compare)
-                    .limit(count)
-                    .collect(Collectors.toList());
-        }
         return filmStorage.getPopularByGenreAndYear(count, genreId, year);
     }
-
-    private int compare(Film f0, Film f1) {
-        return -1 * (f0.getLikesFromUsers().size() - f1.getLikesFromUsers().size()); //обратный порядок
-    }
-
 }

@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.storage.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -21,7 +22,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.List;
-
+@Slf4j
 @Primary
 @Component
 @RequiredArgsConstructor
@@ -106,8 +107,8 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public Collection<Film> get() {
         String sqlQuery =
-                "SELECT *" +
-                        "FROM film";
+                "SELECT * " +
+                        "FROM films";
 
         return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> makeFilmFromComplexTable(rs));
     }
@@ -237,32 +238,22 @@ public class FilmDbStorage implements FilmStorage {
 
     public Collection<Film> getPopularByGenreAndYear(int count, int genreId, int year) {
         List<Film> films;
-        String sqlQuery;
-
-        String sqlSelect = "SELECT f.film_id, f.name, f.description, f.release_date, f.duration, f.rating_id, " +
+        String sqlQuery = "SELECT f.film_id, f.name, f.description, f.release_date, f.duration, f.rating_id, " +
                 "COUNT(fl.user_id) as likes " +
-                "FROM FILMS f ";
-        String sqlJoin = "LEFT JOIN likes fl ON f.film_id=fl.film_id ";
-        String sqlWhere = "WHERE fg.genre_id = ? ";
-        String sqlGroup = "GROUP BY f.film_id, f.name, f.description, f.release_date, f.duration, f.rating_id " +
+                "FROM films f " +
+                "LEFT JOIN likes fl ON f.film_id=fl.film_id " +
+                "LEFT JOIN genres fg ON f.film_id=fg.film_id AND fg.genre_id = ?" +
+                "WHERE COALESCE (fg.genre_id, 0) = ?" +
+                "AND EXTRACT (year FROM COALESCE(f.release_date, '1800-01-01')) = " +
+                "CASE WHEN ? = 0 THEN EXTRACT (year FROM COALESCE(f.release_date, '1800-01-01')) ELSE ? END " +
+                "GROUP BY f.film_id, f.name, f.description, f.release_date, f.duration, f.rating_id " +
                 "ORDER BY likes DESC, film_id " +
                 "LIMIT ?";
 
-        if (genreId == 0) {
-            sqlWhere = "WHERE EXTRACT (year FROM f.release_date) = ? ";
-            sqlQuery = sqlSelect + sqlJoin + sqlWhere + sqlGroup;
-            films = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> makeFilmFromComplexTable(rs), year, count);
+        films = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> makeFilmFromComplexTable(rs), genreId, genreId, year, year, count);
 
-        } else if (year == 0) {
-            sqlJoin += "JOIN films_genres fg ON f.film_id=fg.film_id ";
-            sqlQuery = sqlSelect + sqlJoin + sqlWhere + sqlGroup;
-            films = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> makeFilmFromComplexTable(rs), genreId, count);
-
-        } else {
-            sqlJoin += "JOIN films_genres fg ON f.film_id=fg.film_id ";
-            sqlWhere += "AND EXTRACT (year FROM f.release_date) = ? ";
-            sqlQuery = sqlSelect + sqlJoin + sqlWhere + sqlGroup;
-            films = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> makeFilmFromComplexTable(rs), genreId, year, count);
+        if (films.isEmpty()) {
+            log.info("Популярные фильмы с жанром {} и годом {} не найдены.", genreId, year);
         }
         return films;
     }
