@@ -284,4 +284,44 @@ public class FilmDbStorage implements FilmStorage {
                     "%" + query + "%");
         }
     }
+    @Override
+    public Collection<Film> getPopularByGenreAndYear(int count, int genreId, int year) {
+        String sqlQuery;
+
+        if (genreId == 0) {
+            sqlQuery = "select f.FILM_ID, f.NAME, f.DESCRIPTION, f.RELEASE_DATE, f.DURATION, f.RATING_ID " +
+                    "from FILMS f " +
+                    "left join LIKES l on f.FILM_ID = l.FILM_ID " +
+                    "join FILM_CATEGORY fg on f.FILM_ID = fg.FILM_ID " +
+                    "WHERE EXTRACT(YEAR FROM f.release_date) = ? " +
+                    "group by f.FILM_ID " +
+                    "order by COUNT(l.USER_ID) desc " +
+                    "limit ?";
+
+            return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> makeFilmFromComplexTable(rs), genreId, count);
+        } else if (year == 0) {
+            sqlQuery = "select f.FILM_ID, f.NAME, f.DESCRIPTION, f.RELEASE_DATE, f.DURATION, f.RATING_ID " +
+                    "from FILMS f " +
+                    "left join LIKES l on f.FILM_ID = l.FILM_ID " +
+                    "join FILM_CATEGORY fg on f.FILM_ID = fg.FILM_ID " +
+                    "WHERE fg.genre_id = ? " +
+                    "group by f.FILM_ID " +
+                    "order by COUNT(l.USER_ID) desc " +
+                    "limit ?";
+
+            return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> makeFilmFromComplexTable(rs), year, count);
+        } else {
+            sqlQuery = "select f.FILM_ID, f.NAME, f.DESCRIPTION, f.RELEASE_DATE, f.DURATION, f.RATE, f.RATING_ID " +
+                    "from FILMS f " +
+                    "left join LIKES l on f.FILM_ID = l.FILM_ID " +
+                    "join FILM_CATEGORY fg on f.FILM_ID = fg.FILM_ID " +
+                    "where fg.GENRE_ID = ? " +
+                    "group by f.FILM_ID " +
+                    "order by COUNT(l.USER_ID) desc " +
+                    "limit ?";
+
+            return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> makeFilmFromComplexTable(rs), genreId, year, count);
+        }
+    }
+
 }
