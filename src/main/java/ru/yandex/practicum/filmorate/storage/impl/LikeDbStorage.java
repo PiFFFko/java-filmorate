@@ -22,7 +22,9 @@ public class LikeDbStorage implements LikeStorage {
     private static final String GET_LIKES_FOR_FILM_QUERY = "select * from likes where film_id = ? and user_id = ?";
     private static final String INSERT_LIKE_QUERY = "insert into likes(film_id, user_id) values(?, ?)";
     private static final String DELETE_LIKE_QUERY = "delete from likes where film_id = ? and user_id = ?";
-    private static final String GET_ALL_LIKES_QUERY = "select * from likes where film_id = ?";
+    private static final String GET_ALL_LIKES_QUERY = "select * from likes";
+    private static final String GET_ALL_LIKES_BY_FILM_QUERY = "select * from likes where film_id = ?";
+    private static final String GET_ALL_LIKES_BY_USER_QUERY = "select * from likes where user_id = ?";
 
     private static final String LIKE_NOT_EXIST_MESSAGE = "Лайка от юзера %s на фильм %s не существует.";
     private static final String LIKE_OR_FILM_NOT_EXIST_MESSAGE = "Фильма %s не существует или его никто не лайкал.";
@@ -45,12 +47,26 @@ public class LikeDbStorage implements LikeStorage {
     }
 
     @Override
+    public Collection<Like> getAllLikes() {
+        return jdbcTemplate.query(GET_ALL_LIKES_QUERY, (rs, rowNum) -> makeLike(rs));
+    }
+
+    @Override
     public Collection<Like> getAllLikesForFilm(Integer filmId) {
-        List<Like> likes = jdbcTemplate.query(GET_ALL_LIKES_QUERY, (rs, rowNum) -> makeLike(rs), filmId);
+        List<Like> likes = jdbcTemplate.query(GET_ALL_LIKES_BY_FILM_QUERY, (rs, rowNum) -> makeLike(rs), filmId);
         if (!likes.isEmpty()) {
             return likes;
         }
         throw new EntityNotExistException(String.format(LIKE_OR_FILM_NOT_EXIST_MESSAGE, filmId));
+    }
+
+    @Override
+    public Collection<Like> getAllLikesByUser(Integer userId) {
+        List<Like> likes = jdbcTemplate.query(GET_ALL_LIKES_BY_USER_QUERY, (rs, rowNum) -> makeLike(rs), userId);
+        if (!likes.isEmpty()) {
+            return likes;
+        }
+        throw new EntityNotExistException(String.format(LIKE_OR_FILM_NOT_EXIST_MESSAGE, userId));
     }
 
     @Override
