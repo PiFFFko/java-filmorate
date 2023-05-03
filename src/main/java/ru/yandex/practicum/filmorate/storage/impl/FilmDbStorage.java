@@ -20,7 +20,9 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Primary
@@ -121,6 +123,39 @@ public class FilmDbStorage implements FilmStorage {
             "inner join ratings r on r.rating_id = f.rating_id " +
             "inner join likes l on l.film_id = f.film_id " +
             "where l.user_id = ?";
+    private static final String GET_MOST_POPULAR_BY_GENRE = "select f.film_id, f.name, f.description, f.release_date, " +
+            "f.rating_id, r.rating_name, f.duration, COUNT(l.user_id) AS COUNT " +
+            "from films f " +
+            "left join likes l ON l.film_id = f.film_id " +
+            "left join ratings r on r.rating_id = f.rating_id " +
+            "left join film_category fc on fc.film_id = f.film_id " +
+            "left join genres g on g.genre_id = fc.genre_id " +
+            "where fc.genre_id = ? " +
+            "group by f.film_id " +
+            "order by count(l.user_id) desc " +
+            "limit ?";
+    private static final String GET_MOST_POPULAR_BY_YEAR = "select f.film_id, f.name, f.description, f.release_date, " +
+            "f.rating_id, r.rating_name, f.duration, COUNT(l.user_id) AS COUNT " +
+            "from films f " +
+            "left join likes l ON l.film_id = f.film_id " +
+            "left join ratings r on r.rating_id = f.rating_id " +
+            "left join film_category fc on fc.film_id = f.film_id " +
+            "left join genres g on g.genre_id = fc.genre_id " +
+            "where extract(year from f.release_date) = ? " +
+            "group by f.film_id " +
+            "order by count(l.user_id) desc " +
+            "limit ?";
+    private static final String GET_MOST_POPULAR_BY_GENRE_AND_YEAR = "select f.film_id, f.name, f.description, f.release_date, " +
+            "f.rating_id, r.rating_name, f.duration, COUNT(l.user_id) AS COUNT " +
+            "from films f " +
+            "left join likes l ON l.film_id = f.film_id " +
+            "left join ratings r on r.rating_id = f.rating_id " +
+            "left join film_category fc on fc.film_id = f.film_id " +
+            "left join genres g on g.genre_id = fc.genre_id " +
+            "where fc.genre_id = ? and extract(year from f.release_date) = ? " +
+            "group by f.film_id " +
+            "order by count(l.user_id) desc " +
+            "limit ?";
 
     @Override
     public Film get(Integer id) {
@@ -284,44 +319,17 @@ public class FilmDbStorage implements FilmStorage {
                     "%" + query + "%");
         }
     }
+
     @Override
     public Collection<Film> getPopularByGenreAndYear(int count, int genreId, int year) {
-        String sqlQuery;
-
-        if (genreId == 0) {
-            sqlQuery = "select f.FILM_ID, f.NAME, f.DESCRIPTION, f.RELEASE_DATE, f.DURATION, f.RATING_ID " +
-                    "from FILMS f " +
-                    "left join LIKES l on f.FILM_ID = l.FILM_ID " +
-                    "join FILM_CATEGORY fg on f.FILM_ID = fg.FILM_ID " +
-                    "WHERE EXTRACT(YEAR FROM f.release_date) = ? " +
-                    "group by f.FILM_ID " +
-                    "order by COUNT(l.USER_ID) desc " +
-                    "limit ?";
-
-            return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> makeFilmFromComplexTable(rs), genreId, count);
+        if (genreId == 0 && year == 0) {
+            return getPopular(count);
+        } else if (genreId == 0) {
+            return jdbcTemplate.query(GET_MOST_POPULAR_BY_YEAR, (rs, rowNum) -> makeFilmFromComplexTable(rs), year, count);
         } else if (year == 0) {
-            sqlQuery = "select f.FILM_ID, f.NAME, f.DESCRIPTION, f.RELEASE_DATE, f.DURATION, f.RATING_ID " +
-                    "from FILMS f " +
-                    "left join LIKES l on f.FILM_ID = l.FILM_ID " +
-                    "join FILM_CATEGORY fg on f.FILM_ID = fg.FILM_ID " +
-                    "WHERE fg.genre_id = ? " +
-                    "group by f.FILM_ID " +
-                    "order by COUNT(l.USER_ID) desc " +
-                    "limit ?";
-
-            return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> makeFilmFromComplexTable(rs), year, count);
+            return jdbcTemplate.query(GET_MOST_POPULAR_BY_GENRE, (rs, rowNum) -> makeFilmFromComplexTable(rs), genreId, count);
         } else {
-            sqlQuery = "select f.FILM_ID, f.NAME, f.DESCRIPTION, f.RELEASE_DATE, f.DURATION, f.RATE, f.RATING_ID " +
-                    "from FILMS f " +
-                    "left join LIKES l on f.FILM_ID = l.FILM_ID " +
-                    "join FILM_CATEGORY fg on f.FILM_ID = fg.FILM_ID " +
-                    "where fg.GENRE_ID = ? " +
-                    "group by f.FILM_ID " +
-                    "order by COUNT(l.USER_ID) desc " +
-                    "limit ?";
-
-            return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> makeFilmFromComplexTable(rs), genreId, year, count);
+            return jdbcTemplate.query(GET_MOST_POPULAR_BY_GENRE_AND_YEAR, (rs, rowNum) -> makeFilmFromComplexTable(rs), genreId, year, count);
         }
     }
-
 }
