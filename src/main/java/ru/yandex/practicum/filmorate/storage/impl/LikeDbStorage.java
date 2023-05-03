@@ -20,7 +20,7 @@ public class LikeDbStorage implements LikeStorage {
     private final JdbcTemplate jdbcTemplate;
 
     private static final String GET_LIKES_FOR_FILM_QUERY = "select * from likes where film_id = ? and user_id = ?";
-    private static final String INSERT_LIKE_QUERY = "insert into likes(film_id, user_id) values(?, ?)";
+    private static final String INSERT_LIKE_QUERY = "merge into likes(film_id, user_id) values(?, ?)";
     private static final String DELETE_LIKE_QUERY = "delete from likes where film_id = ? and user_id = ?";
     private static final String GET_ALL_LIKES_QUERY = "select * from likes";
     private static final String GET_ALL_LIKES_BY_FILM_QUERY = "select * from likes where film_id = ?";

@@ -82,7 +82,8 @@ public class FilmDbStorage implements FilmStorage {
             "where DIRECTORS.ID = ?" +
             "group by f.film_id " +
             "order by count(l.user_id)";
-    private static final String SEARCH_FILM_BY_TITLE = "select * from films " +
+    private static final String SEARCH_FILM_BY_TITLE = "select films.film_id, description, films.name, release_date, " +
+            "duration, films.rating_id, rating_name, count(l.USER_ID) from films " +
             "left join ratings r on r.rating_id = films.rating_id " +
             "left join film_category fc on fc.film_id = films.film_id " +
             "left join genres g on g.genre_id = fc.genre_id " +
@@ -91,7 +92,8 @@ public class FilmDbStorage implements FilmStorage {
             "left join likes l ON l.film_id = films.film_id " +
             "where lower(films.name) like ?" +
             "order by count(l.user_id) desc";
-    private static final String SEARCH_FILM_BY_DIRECTOR = "select * from films " +
+    private static final String SEARCH_FILM_BY_DIRECTOR = "select films.film_id, description, films.name, release_date, " +
+            "duration, films.rating_id, rating_name, count(l.USER_ID) from films " +
             "left join ratings r on r.rating_id = films.rating_id " +
             "left join film_category fc on fc.film_id = films.film_id " +
             "left join genres g on g.genre_id = fc.genre_id " +
@@ -100,7 +102,8 @@ public class FilmDbStorage implements FilmStorage {
             "left join likes l ON l.film_id = films.film_id " +
             "where lower(d.NAME) like ?" +
             "order by count(l.user_id) desc";
-    private static final String SEARCH_FILM = "select distinct * from films " +
+    private static final String SEARCH_FILM = "select distinct films.film_id, description, films.name, release_date, " +
+            "duration, films.rating_id, rating_name, count(l.USER_ID) from films " +
             "left join ratings r on r.rating_id = films.rating_id " +
             "left join film_category fc on fc.film_id = films.film_id " +
             "left join genres g on g.genre_id = fc.genre_id " +
