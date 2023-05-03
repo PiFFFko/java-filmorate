@@ -3,8 +3,10 @@ package ru.yandex.practicum.filmorate.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.EntityNotExistException;
+import ru.yandex.practicum.filmorate.model.Feed;
 import ru.yandex.practicum.filmorate.model.FriendRequest;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.FeedService;
 import ru.yandex.practicum.filmorate.service.FriendService;
 import ru.yandex.practicum.filmorate.service.UserService;
 
@@ -17,6 +19,7 @@ import java.util.Collection;
 public class UserController {
     private final UserService userService;
     private final FriendService friendService;
+    private final FeedService feedService;
 
     @GetMapping
     public Collection<User> getAllUsers() {
@@ -61,5 +64,10 @@ public class UserController {
     @GetMapping("/{id}/friends/common/{otherId}")
     public Collection<User> getCommonFriends(@PathVariable Integer id, @PathVariable Integer otherId) {
         return userService.getCommonFriends(id, otherId);
+    }
+
+    @GetMapping("/{id}/feed")
+    public Collection<Feed> getFeedByUser(@PathVariable Integer id) {
+        return feedService.getFeedByUser(id);
     }
 }

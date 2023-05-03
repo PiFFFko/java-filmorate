@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.EntityNotExistException;
 import ru.yandex.practicum.filmorate.exception.ObjectAlreadyExistException;
-import ru.yandex.practicum.filmorate.model.Grade;
-import ru.yandex.practicum.filmorate.model.Review;
+import ru.yandex.practicum.filmorate.model.*;
 import ru.yandex.practicum.filmorate.service.ReviewService;
+import ru.yandex.practicum.filmorate.storage.FeedStorage;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.ReviewStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
@@ -27,6 +27,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Autowired
     @Qualifier("userDbStorage")
     private UserStorage userStorage;
+    private final FeedStorage feedStorage;
 
     @Override
     public Review get(Integer id) {
@@ -45,7 +46,14 @@ public class ReviewServiceImpl implements ReviewService {
             throw new EntityNotExistException("userId Not Found");
         } else {
             review.setUseful(0);
-            return reviewStorage.add(review);
+            Review result = reviewStorage.add(review);
+            feedStorage.add(Feed.builder()
+                    .userId(review.getUserId())
+                    .eventType(EventType.REVIEW)
+                    .operation(Operation.ADD)
+                    .entityId(review.getReviewId())
+                    .build());
+            return result;
         }
     }
 
@@ -56,7 +64,14 @@ public class ReviewServiceImpl implements ReviewService {
         } else if (userStorage.get(review.getUserId()) == null) {
             throw new EntityNotExistException("userId Not Found");
         } else if (reviewStorage.containsKey(review.getReviewId())) {
-            return reviewStorage.update(review);
+            Review result = reviewStorage.update(review);
+            feedStorage.add(Feed.builder()
+                    .userId(result.getUserId())
+                    .eventType(EventType.REVIEW)
+                    .operation(Operation.UPDATE)
+                    .entityId(result.getReviewId())
+                    .build());
+            return result;
         } else {
             throw new EntityNotExistException(review + " не существует. Воспользуйтесь методом add");
         }
@@ -77,7 +92,15 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public Integer deleteReview(Integer id) {
-        return reviewStorage.remove(id);
+        Review review = get(id);
+        Integer result = reviewStorage.remove(id);
+        feedStorage.add(Feed.builder()
+                .userId(review.getUserId())
+                .eventType(EventType.REVIEW)
+                .operation(Operation.REMOVE)
+                .entityId(review.getFilmId())
+                .build());
+        return result;
     }
 
     @Override
