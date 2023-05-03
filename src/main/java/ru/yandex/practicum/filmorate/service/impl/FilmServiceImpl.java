@@ -55,9 +55,11 @@ public class FilmServiceImpl implements FilmService {
     public Film remove(Integer id) {
         return filmStorage.remove(get(id));
     }
+
     public Collection<Film> getTop(int count, int genreId, int year) {
         return filmStorage.getPopularByGenreAndYear(count, genreId, year);
     }
+
     @Override
     public Collection<Film> searchFilms(String query, String by) {
         return filmStorage.searchFilms(query, by);

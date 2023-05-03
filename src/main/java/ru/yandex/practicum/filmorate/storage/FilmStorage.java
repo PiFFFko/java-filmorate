@@ -12,5 +12,6 @@ public interface FilmStorage extends BaseStorage<Film> {
     Collection<Film> getDirectorsFilms(Integer directorId, String sortBy);
 
     Collection<Film> searchFilms(String query, String by);
+
     Collection<Film> getPopularByGenreAndYear(int count, int genreId, int year);
 }
