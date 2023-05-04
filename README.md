@@ -1,6 +1,6 @@
 # java-filmorate
 # ER диаграмма
-![ER](https://user-images.githubusercontent.com/38191066/233399403-aa81776b-10dc-441b-b360-5fd138887cf0.png)
+![ER](https://user-images.githubusercontent.com/38191066/236218181-b6a3b302-eb5a-467e-a918-515e62d98c58.png)
 
 В рамках группового проекта реализованы следующие функциональности:
 1. общие фильмы
