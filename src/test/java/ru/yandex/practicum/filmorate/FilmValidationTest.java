@@ -4,6 +4,8 @@ package ru.yandex.practicum.filmorate;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import javax.validation.ConstraintViolation;
@@ -13,7 +15,7 @@ import javax.validation.ValidatorFactory;
 import java.time.LocalDate;
 import java.util.Set;
 
-public class FilmValidationTest {
+class FilmValidationTest {
     Film film;
     private Validator validator;
 
@@ -74,16 +76,10 @@ public class FilmValidationTest {
         Assertions.assertTrue(violations.isEmpty());
     }
 
-    @Test
-    void negativeDurationShouldFailValidation() {
-        film.setName("Die Hard");
-        film.setDuration(-10);
-        Set<ConstraintViolation<Film>> violations = validator.validate(film);
-        Assertions.assertFalse(violations.isEmpty());
-    }
 
-    @Test
-    void zeroDurationShouldFailValidation() {
+    @ParameterizedTest
+    @ValueSource(longs = {0, -10})
+    void negativeOrZeroDurationShouldFailValidation(long duration) {
         film.setName("Die Hard");
         film.setDuration(0);
         Set<ConstraintViolation<Film>> violations = validator.validate(film);

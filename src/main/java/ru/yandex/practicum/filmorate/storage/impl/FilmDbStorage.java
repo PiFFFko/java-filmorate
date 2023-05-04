@@ -17,6 +17,7 @@ import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
@@ -206,7 +207,7 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Film add(Film film) {
-        String releaseDate = film.getReleaseDate().format(DATE_FORMATTER);
+        String releaseDate = (film.getReleaseDate() == null) ? null : film.getReleaseDate().format(DATE_FORMATTER);
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement statement = connection.prepareStatement(INSERT_FILM_QUERY, new String[]{"film_id"});
@@ -214,7 +215,11 @@ public class FilmDbStorage implements FilmStorage {
             statement.setString(2, film.getDescription());
             statement.setString(3, releaseDate);
             statement.setLong(4, film.getDuration());
-            statement.setInt(5, film.getMpa().getId());
+            if (film.getMpa() == null) {
+                statement.setInt(5, Types.INTEGER);
+            } else {
+                statement.setInt(5, film.getMpa().getId());
+            }
             return statement;
         }, keyHolder);
         film.setId(keyHolder.getKey().intValue());

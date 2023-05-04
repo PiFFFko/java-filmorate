@@ -14,7 +14,7 @@ import ru.yandex.practicum.filmorate.storage.FriendStorage;
 public class FriendDbStorage implements FriendStorage {
     private final JdbcTemplate jdbcTemplate;
 
-    private static final String SEND_FRIEND_REQUEST_QUERY = "insert into friend_requests(user_id_from, user_id_to) " +
+    private static final String SEND_FRIEND_REQUEST_QUERY = "merge into friend_requests(user_id_from, user_id_to) " +
             "values (?,?)";
     private static final String DELETE_FRIEND_REQUEST_QUERY = "delete from friend_requests where " +
             "user_id_from = ? and user_id_to = ?";

@@ -15,7 +15,7 @@ import ru.yandex.practicum.filmorate.storage.impl.GenreDbStorage;
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class GenreDbTest {
+class GenreDbTest {
     private final GenreDbStorage genreDbStorage;
     private Genre testGenre;
 
