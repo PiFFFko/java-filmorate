@@ -1,33 +1,18 @@
 package ru.yandex.practicum.filmorate.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.LikeStorage;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class FilmServiceImpl implements FilmService {
-
-    @Autowired
-    @Qualifier("filmDbStorage")
-    private FilmStorage filmStorage;
-    @Autowired
-    @Qualifier("likeDbStorage")
-    private LikeStorage likeStorage;
-
-    public FilmServiceImpl(FilmStorage filmStorage) {
-        this.filmStorage = filmStorage;
-    }
+    private final FilmStorage filmStorage;
 
     @Override
     public Film get(Integer id) {
@@ -36,13 +21,13 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public Film create(Film film) {
-            film.setGenres(film.getGenres().stream().distinct().collect(Collectors.toList()));
+        film.setGenres(film.getGenres().stream().distinct().collect(Collectors.toList()));
         return filmStorage.add(film);
     }
 
     @Override
     public Film update(Film film) {
-            film.setGenres(film.getGenres().stream().distinct().collect(Collectors.toList()));
+        film.setGenres(film.getGenres().stream().distinct().collect(Collectors.toList()));
         return filmStorage.update(film);
     }
 
@@ -55,4 +40,29 @@ public class FilmServiceImpl implements FilmService {
     public Collection<Film> getPopular(Integer count) {
         return filmStorage.getPopular(count);
     }
+
+    @Override
+    public Collection<Film> getCommonFilms(Integer userId, Integer friendId) {
+        return filmStorage.getCommonFilms(userId, friendId);
+    }
+
+    @Override
+    public Collection<Film> getDirectorsFilms(Integer directorId, String sortBy) {
+        return filmStorage.getDirectorsFilms(directorId, sortBy);
+    }
+
+    @Override
+    public Film remove(Integer id) {
+        return filmStorage.remove(get(id));
+    }
+
+    public Collection<Film> getTop(int count, int genreId, int year) {
+        return filmStorage.getPopularByGenreAndYear(count, genreId, year);
+    }
+
+    @Override
+    public Collection<Film> searchFilms(String query, String by) {
+        return filmStorage.searchFilms(query, by);
+    }
 }
+

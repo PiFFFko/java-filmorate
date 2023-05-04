@@ -2,9 +2,9 @@ package ru.yandex.practicum.filmorate.storage.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 import ru.yandex.practicum.filmorate.exception.EntityNotExistException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -12,8 +12,7 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 public class InMemoryUserStorage implements UserStorage {
-
-    private Map<Integer, User> users = new HashMap<>();
+    private final Map<Integer, User> users = new HashMap<>();
     private Integer idGenerator = 1;
 
     @Override
@@ -35,7 +34,7 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User remove(User user) {
-        return null;
+        return users.remove(user.getId());
     }
 
     @Override
@@ -115,5 +114,4 @@ public class InMemoryUserStorage implements UserStorage {
         }
         throw new EntityNotExistException(String.format("Пользователя с id {} или {} не существует", id, otherId));
     }
-
 }

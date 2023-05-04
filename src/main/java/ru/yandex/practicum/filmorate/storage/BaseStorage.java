@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.storage;
 import java.util.Collection;
 
 public interface BaseStorage<T> {
-
     T get(Integer id);
 
     T add(T t);

@@ -16,7 +16,7 @@ import ru.yandex.practicum.filmorate.storage.impl.RatingDbStorage;
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class RatingDbTest {
+class RatingDbTest {
 
     private final RatingDbStorage ratingDbStorage;
     private Rating testRating;

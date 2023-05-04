@@ -20,7 +20,7 @@ import java.time.Month;
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class FilmDbTest {
+class FilmDbTest {
 
     private final FilmDbStorage filmDbStorage;
     private Film testFilm;

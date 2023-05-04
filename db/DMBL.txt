@@ -5,6 +5,7 @@ Project filmorate{
 Table films{
   film_id integer [primary key]
   description varchar[200]
+  name varchar[100]
   release_date date
   duration long
   rating_id integer 
@@ -17,7 +18,7 @@ Table likes{
 
 Table ratings{
   rating_id integer [primary key]
-  name varchar[30]
+  name varchar[50]
 }
 
 Table film_category{
@@ -27,7 +28,7 @@ Table film_category{
 
 Table genres{
   genre_id integer [primary key]
-  name varchar[30]
+  name varchar[50]
 }
 
 Table users{
@@ -44,6 +45,39 @@ user_id_to integer [primary key]
 friend_status boolean
 }
 
+Table directors{
+  id integer [primary key]
+  name varchar[100]
+}
+
+Table film_director{
+  film_id integer [primary key]
+  director_id integer [primary key]
+}
+
+Table reviews{
+  review_id integer [primary key]
+  content varchar[200]
+  is_positive boolean
+  user_id integer
+  film_id integer
+  useful integer
+}
+
+Table reviews_grades{
+  review_id integer [primary key]
+  user_id integer [primary key]
+  grade_type boolean
+}
+
+Table feed{
+  id integer [primary key]
+  timestamp timestamp
+  user_id integer
+  eventType integer
+  operation integer
+  entityId integer
+}
 
 Ref: "films"."rating_id" > "ratings"."rating_id"
 
@@ -58,3 +92,17 @@ Ref: "film_category"."genre_id" > "genres"."genre_id"
 Ref: "films"."film_id" < "likes"."film_id"
 
 Ref: "likes"."user_id" > "users"."user_id"
+
+Ref: "reviews"."user_id" > "users"."user_id"
+
+Ref: "reviews"."film_id" > "films"."film_id"
+
+Ref: "film_director"."film_id" > "films"."film_id"
+
+Ref: "film_director"."director_id" > "directors"."id"
+
+Ref: "feed"."user_id" > "users"."user_id"
+
+Ref: "reviews_grades"."user_id" > "users"."user_id"
+
+Ref: "reviews_grades"."review_id" > "reviews"."review_id"

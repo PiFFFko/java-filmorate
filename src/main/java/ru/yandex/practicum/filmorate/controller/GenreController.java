@@ -7,11 +7,10 @@ import ru.yandex.practicum.filmorate.service.GenreService;
 
 import java.util.Collection;
 
-@AllArgsConstructor
 @RestController
+@AllArgsConstructor
 @RequestMapping(value = "/genres")
 public class GenreController {
-
     private final GenreService genreService;
 
     @GetMapping
@@ -33,5 +32,4 @@ public class GenreController {
     public Genre getGenre(@PathVariable Integer id) {
         return genreService.get(id);
     }
-
 }

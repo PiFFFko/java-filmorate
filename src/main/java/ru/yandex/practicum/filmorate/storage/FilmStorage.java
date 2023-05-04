@@ -7,4 +7,11 @@ import java.util.Collection;
 public interface FilmStorage extends BaseStorage<Film> {
     Collection<Film> getPopular(Integer count);
 
+    Collection<Film> getCommonFilms(Integer userId, Integer friendId);
+
+    Collection<Film> getDirectorsFilms(Integer directorId, String sortBy);
+
+    Collection<Film> searchFilms(String query, String by);
+
+    Collection<Film> getPopularByGenreAndYear(int count, int genreId, int year);
 }

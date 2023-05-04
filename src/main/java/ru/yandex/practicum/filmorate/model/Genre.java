@@ -10,6 +10,6 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 public class Genre {
     int id;
-    @EqualsAndHashCode.Exclude String name;
-
+    @EqualsAndHashCode.Exclude
+    String name;
 }
