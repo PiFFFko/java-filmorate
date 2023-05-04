@@ -2,8 +2,6 @@ package ru.yandex.practicum.filmorate.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.EntityNotExistException;
 import ru.yandex.practicum.filmorate.exception.ObjectAlreadyExistException;
@@ -21,12 +19,8 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
     private final ReviewStorage reviewStorage;
-    @Autowired
-    @Qualifier("filmDbStorage")
-    private FilmStorage filmStorage;
-    @Autowired
-    @Qualifier("userDbStorage")
-    private UserStorage userStorage;
+    private final FilmStorage filmStorage;
+    private final UserStorage userStorage;
     private final FeedStorage feedStorage;
 
     @Override
