@@ -71,10 +71,7 @@ public class ReviewDbStorage implements ReviewStorage {
                 "FROM REVIEWS " +
                 "WHERE review_id = ?";
         Optional<Review> reviewOptional = jdbcTemplate.query(sqlQuery, new ReviewMapper(), id).stream().findFirst();
-        if (reviewOptional.isPresent()) {
-            return true;
-        }
-        return false;
+        return reviewOptional.isPresent();
     }
 
     @Override
@@ -84,45 +81,32 @@ public class ReviewDbStorage implements ReviewStorage {
                 "WHERE user_id = ? AND film_id = ? AND content = ? AND is_positive = ?";
         Optional<Review> reviewOptional = jdbcTemplate.query(sqlQuery, new ReviewMapper(), review.getUserId(), review.getFilmId(),
                 review.getContent(), review.getIsPositive()).stream().findFirst();
-        if (reviewOptional.isPresent()) {
-            return true;
-        }
-        return false;
+        return reviewOptional.isPresent();
     }
 
     @Override
     public Collection<Review> getAll() {
         String sqlQuery = "SELECT * " +
-                "FROM REVIEWS";
-        return jdbcTemplate.query(sqlQuery, new ReviewMapper())
-                .stream()
-                .sorted((r1, r2) -> {
-                    if (r1.getUseful() > r2.getUseful()) return -1;
-                    return 1;
-                })
-                .collect(Collectors.toList());
+                "FROM REVIEWS " +
+                "ORDER BY useful desc";
+        return jdbcTemplate.query(sqlQuery, new ReviewMapper());
     }
 
     @Override
     public Collection<Review> getReviewsFromFilm(Integer filmId, Integer count) {
         String sqlQuery = "SELECT * FROM REVIEWS " +
-                "WHERE film_id = ?";
+                "WHERE film_id = ? " +
+                "ORDER BY useful desc";
         return jdbcTemplate.query(sqlQuery, new ReviewMapper(), filmId)
                 .stream()
-                .sorted((r1, r2) -> {
-                    if (r1.getUseful() > r2.getUseful()) return -1;
-                    return 1;
-                })
                 .limit(count).collect(Collectors.toList());
     }
 
     @Override
     public boolean addUserGrade(Integer reviewId, Integer userId, Grade grade) {
-        boolean booleanGrade = getGrade(grade);
+        boolean booleanGrade = getBooleanGrade(grade);
         String sqlQuery = "INSERT INTO REVIEWS_GRADES(review_id, user_id, grade_type) " +
-                "VALUES(?,?,?) "; /*+
-                "ON CONFLICT (review_id OR user_id OR grade_type) DO UPDATE SET review_id = EXCLUDED.review_id, " +
-                "user_id = EXCLUDED.user_id, grade_type = EXCLUDED.grade_type";*/
+                "VALUES(?,?,?) ";
         jdbcTemplate.update(sqlQuery, reviewId, userId, booleanGrade);
         changeUseful(reviewId, booleanGrade, ChangeType.ADD);
         return true;
@@ -130,7 +114,7 @@ public class ReviewDbStorage implements ReviewStorage {
 
     @Override
     public boolean deleteUserGrade(Integer reviewId, Integer userId, Grade grade) {
-        boolean booleanGrade = getGrade(grade);
+        boolean booleanGrade = getBooleanGrade(grade);
         String sqlQuery = "DELETE FROM REVIEWS_GRADES " +
                 "WHERE review_id = ?, user_id = ?, grade_type = ?";
         jdbcTemplate.update(sqlQuery, reviewId, userId, booleanGrade);
@@ -138,15 +122,12 @@ public class ReviewDbStorage implements ReviewStorage {
         return true;
     }
 
-    private static boolean getGrade(Grade grade) {
-        if (grade.name() == "LIKE") {
-            return true;
-        }
-        return false;
+    private static boolean getBooleanGrade(Grade grade) {
+        return grade.name().equals("LIKE");
     }
 
     private void changeUseful(Integer reviewId, boolean grade, ChangeType changeType) {
-        if (grade == true) {
+        if (grade) {
             if (changeType == ChangeType.ADD) {
                 //Добавлен лайк, сл-но увеличиваем useful + 1
                 increaseUseful(reviewId);
